@@ -53,4 +53,32 @@ public class XMLHandler {
          */
         return true;
     }
+
+    @FXML
+    private void uploadCSV() throws IOException {
+
+        // Setting a file chooser of XML files only
+        FileChooser chooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+        chooser.setTitle("Choose XML file");
+        chooser.getExtensionFilters().add(extFilter);
+        File file = chooser.showOpenDialog(null);
+
+        if (file == null)
+            return;
+
+        // TODO: add support for the file validation
+        boolean validated = validateXML(file);
+
+        // Save file
+        if (validated) {
+            Files.copy(file.toPath(), (new File(xml_config_path)).toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+
+        }
+        // Show errors
+        else {
+
+        }
+    }
 }
