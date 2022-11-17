@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
@@ -86,7 +85,7 @@ public class FileHandler {
     }
 
     private boolean validateCSV(File file) throws IOException {
-        HashSet uniqueColumnsSet = new HashSet<>();
+        HashSet<String> uniqueColumnsSet = new HashSet<>();
         BufferedReader br = new BufferedReader(new FileReader(file));
         String header = br.readLine();
         if (header != null) {
