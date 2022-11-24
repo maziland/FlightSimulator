@@ -59,45 +59,48 @@ public class FileHandler {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
-            Document org = dBuilder.parse(xml_config_path);
+            Document org = dBuilder.parse(new File(xml_config_path)); //Add manualy the path to the xml
             org.getDocumentElement().normalize();
-            doc.getDocumentElement().normalize();
-            NodeList nList = doc.getElementsByTagName("chunk");
-            NodeList oList = org.getElementsByTagName("chunk");
+            doc.getDocumentElement().normalize(); 
+            NodeList nList = doc.getElementsByTagName("generic");
+            NodeList oList = org.getElementsByTagName("generic");
             Set<String> names = new HashSet<String>();
-
-            for (int i = 0; i < nList.getLength(); i++) {
-                Node nNode = nList.item(i);
-                Node oNode = oList.item(i);
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+            Node dnode = nList.item(0);  
+            Node onode = oList.item(0);  
+            Element elementA = (Element) dnode;
+            Element elementB = (Element) onode;
+            
+            for (int i = 0; i < elementA.getElementsByTagName("chunk").getLength(); i++) {
+               
                     // Makes sure all elements are present
-                    Element eElement = (Element) nNode;
-                    Element oElement = (Element) oNode;
-                    if (eElement.getAttribute("node") != oElement.getAttribute("node")) {
+                    Element eElement = (Element) elementA.getElementsByTagName("chunk").item(i);
+                    Element oElement = (Element) elementB.getElementsByTagName("chunk").item(i);
+                    if ((eElement.getElementsByTagName("node").item(0).getTextContent().compareTo(eElement.getElementsByTagName("node").item(0).getTextContent())) != 0) {
                         flag = false;
                     }
-                    if (!(eElement.hasAttribute("name"))) {
+                    if (eElement.getElementsByTagName("name").item(0) == null) {
+                        
                         flag = false;
                     }
-                    if ((eElement.getAttribute("name")) == "") {
+                    if ((eElement.getElementsByTagName("node").item(0).getTextContent()).length() == 0) {
+                        
                         flag = false;
                     }
-                    if (!(eElement.hasAttribute("type"))) {
+                    if (eElement.getElementsByTagName("type").item(0) == null) {
                         flag = false;
                     }
-                    names.add(eElement.getAttribute("name"));
-                } else {
-                    flag = false;
-                }
-
+                    names.add(eElement.getElementsByTagName("name").item(0).getTextContent());
+               
             }
-            if (names.size() != 168) // Number og name tags
+            /*if (names.size() != 84) // Number og name tags
             {
+                System.out.println(names);  // in the example xml there are chunks with the same name
                 flag = false;
-            }
+            }*/
 
             return flag;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
