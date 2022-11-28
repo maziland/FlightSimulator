@@ -6,15 +6,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collector;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
-import java.io.*;
-
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 
@@ -25,7 +24,8 @@ public class FileHandler {
     // After pulling from git there are 2 Dirs named flightSimulator, a little
     // patch:
     final String xml_config_path = "flightsimulator/src/main/config/config.xml";
-    HashSet<String> xmlColumnsNames;
+    List<String> xmlColumnsNames;
+    List<String> xmlNodes;
 
     @FXML
     private void uploadXML() throws IOException {
@@ -44,86 +44,94 @@ public class FileHandler {
 
         // Save file
         if (validated) {
+            System.out.println("XML verified successfully");
             Files.copy(file.toPath(), (new File(xml_config_path)).toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
         }
         // Show errors
         else {
-
+            System.out.println("Cannot verify XML");
+            xmlColumnsNames.removeAll(xmlColumnsNames);
         }
     }
 
     private boolean validateXML(File file) {
+        /**
+         *
+         * This method gets a File object of a XML file and checks if it satisfies:
+         * 1. The XML has `chunk` tags with a `name` sub-tag
+         * If so, the function returns true and adds all the `name` tags to the
+         * `xmlColumnNames` set
+         * 
+         */
         try {
-            boolean flag = true;
+            boolean verified = true;
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(file);
-            Document org = dBuilder.parse(new File(xml_config_path)); //Add manualy the path to the xml
-            org.getDocumentElement().normalize();
-            doc.getDocumentElement().normalize(); 
-            NodeList nList = doc.getElementsByTagName("generic");
-            NodeList oList = org.getElementsByTagName("generic");
-            Set<String> names = new HashSet<String>();
-            Node dnode = nList.item(0);  
-            Node onode = oList.item(0);  
+            doc.getDocumentElement().normalize();
+            NodeList nList = doc.getElementsByTagName("input");
+            Node dnode = nList.item(0);
             Element elementA = (Element) dnode;
-            Element elementB = (Element) onode;
-            
-            for (int i = 0; i < elementA.getElementsByTagName("chunk").getLength(); i++) {
-               
-                    // Makes sure all elements are present
-                    Element eElement = (Element) elementA.getElementsByTagName("chunk").item(i);
-                    Element oElement = (Element) elementB.getElementsByTagName("chunk").item(i);
-                    if ((eElement.getElementsByTagName("node").item(0).getTextContent().compareTo(eElement.getElementsByTagName("node").item(0).getTextContent())) != 0) {
-                        flag = false;
-                    }
-                    if (eElement.getElementsByTagName("name").item(0) == null) {
-                        
-                        flag = false;
-                    }
-                    if ((eElement.getElementsByTagName("node").item(0).getTextContent()).length() == 0) {
-                        
-                        flag = false;
-                    }
-                    if (eElement.getElementsByTagName("type").item(0) == null) {
-                        flag = false;
-                    }
-                    names.add(eElement.getElementsByTagName("name").item(0).getTextContent());
-               
-            }
-            /*if (names.size() != 84) // Number og name tags
-            {
-                System.out.println(names);  // in the example xml there are chunks with the same name
-                flag = false;
-            }*/
 
-            return flag;
+            // Define the wanted Nodes list
+            ArrayList<String> wantedNodes = new ArrayList<>(Arrays.asList("/controls/flight/aileron[0]",
+                    "/controls/flight/elevator", "/controls/flight/rudder", "/controls/flight/flaps",
+                    "/controls/flight/slats", "/controls/flight/speedbrake", "/controls/engines/engine[0]/throttle",
+                    "/controls/engines/engine[1]/throttle", "/controls/hydraulic/system[0]/engine-pump",
+                    "/controls/hydraulic/system[1]/engine-pump", "/controls/hydraulic/system[0]/electric-pump",
+                    "/controls/hydraulic/system[1]/electric-pump", "/controls/electric/external-power",
+                    "/controls/electric/APU-generator", "/position/latitude-deg", "/position/longitude-deg",
+                    "/position/altitude-ft", "/orientation/roll-deg", "/orientation/pitch-deg",
+                    "/orientation/heading-deg", "/orientation/side-slip-deg", "/velocities/airspeed-kt",
+                    "/velocities/glideslope", "/velocities/vertical-speed-fps",
+                    "/instrumentation/airspeed-indicator/indicated-speed-kt",
+                    "/instrumentation/altimeter/indicated-altitude-ft", "/instrumentation/altimeter/pressure-alt-ft",
+                    "/instrumentation/attitude-indicator/indicated-pitch-deg",
+                    "/instrumentation/attitude-indicator/indicated-roll-deg",
+                    "/instrumentation/attitude-indicator/internal-pitch-deg",
+                    "/instrumentation/attitude-indicator/internal-roll-deg",
+                    "/instrumentation/encoder/indicated-altitude-ft", "/instrumentation/encoder/pressure-alt-ft",
+                    "/instrumentation/gps/indicated-altitude-ft", "/instrumentation/gps/indicated-ground-speed-kt",
+                    "/instrumentation/gps/indicated-vertical-speed",
+                    "/instrumentation/heading-indicator/indicated-heading-deg",
+                    "/instrumentation/magnetic-compass/indicated-heading-deg",
+                    "/instrumentation/slip-skid-ball/indicated-slip-skid",
+                    "/instrumentation/turn-indicator/indicated-turn-rate",
+                    "/instrumentation/vertical-speed-indicator/indicated-speed-fpm", "/engines/engine/rpm"));
+
+            // Configs from XML file, fill while reading and parsing the xml
+            xmlColumnsNames = new ArrayList<String>();
+            xmlNodes = new ArrayList<String>();
+            String nodeTag, nameTag, typeTag;
+
+            for (int i = 0; i < elementA.getElementsByTagName("chunk").getLength(); i++) {
+
+                // Get relevant tags from INPUT tag of the simulator
+                Element eElement = (Element) elementA.getElementsByTagName("chunk").item(i);
+                nodeTag = eElement.getElementsByTagName("node").item(0).getTextContent();
+                // nodeTag = nodeTag.substring(nodeTag.lastIndexOf("/") +
+                // 1).replaceAll("\\[.*\\]", "");
+                nameTag = eElement.getElementsByTagName("name").item(0).getTextContent();
+                typeTag = eElement.getElementsByTagName("type").item(0).getTextContent();
+
+                if (nameTag == "" || nodeTag == "" || typeTag == "")
+                    verified = false;
+
+                xmlColumnsNames.add(nameTag);
+                xmlNodes.add(nodeTag);
+
+            }
+            if (xmlNodes.equals(wantedNodes))
+                verified = true;
+            else
+                verified = false;
+
+            return verified;
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
-        }
-    }
-
-    private void updateXML(String node, String value) {
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document org = dBuilder.parse(xml_config_path);
-            org.getDocumentElement().normalize();
-            NodeList oList = org.getElementsByTagName("chunk");
-            for (int i = 0; i < oList.getLength(); i++) {
-                Node oNode = oList.item(i);
-                if (oNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element oElement = (Element) oNode;
-                    if (oElement.getAttribute("node") == node) {
-                        // this function will edit the xml according to function parameters
-                    }
-
-                }
-            }
-        } catch (Exception e) {
-
         }
     }
 
@@ -147,25 +155,25 @@ public class FileHandler {
         boolean validated = validateCSV(file);
         if (validated) {
             // TODO: upload csv to server
+            System.out.println("CSV Validated successfully");
         } else {
             // Show Errors...
+            System.out.println("Cannot validate CSV");
         }
 
     }
 
     private boolean validateCSV(File file) throws IOException {
-        HashSet<String> uniqueColumnsSet = new HashSet<>();
+        List<String> csvColumns = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(file));
         String header = br.readLine();
         if (header != null) {
-            // Create a distinct set of strings (remove dupilcates)
-            uniqueColumnsSet = Arrays.stream(header.split(",")).distinct()
-                    .collect(Collectors.toCollection(HashSet::new));
+            csvColumns = Arrays.asList(header.split(","));
         }
         br.close();
 
         // Check if uniqueColumnsSet is equal to the Settings file columns
-        if (uniqueColumnsSet.equals(this.xmlColumnsNames)) {
+        if (csvColumns.equals(this.xmlColumnsNames)) {
             return true;
         } else {
             return false;
