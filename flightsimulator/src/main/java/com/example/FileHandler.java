@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -11,14 +12,32 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Button;
 
-public class FileHandler {
+public class FileHandler implements Initializable {
 
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
+        // TODO Auto-generated method stub
+        myProgressBar.setStyle("-fx-accent:red");
+        
+    }
+    @FXML
+    private ProgressBar myProgressBar;
+
+    @FXML
+    private Button myButton;
+
+    double progress;
+    
     // final String xml_config_path = "src/main/config/config.xml";
 
     // After pulling from git there are 2 Dirs named flightSimulator, a little
@@ -179,4 +198,12 @@ public class FileHandler {
             return false;
         }
     }
+
+    
+    public void increaseProgress()
+    {
+        progress += 0.1;
+        myProgressBar.setProgress(progress);
+    }
+
 }
