@@ -13,6 +13,7 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.control.ProgressBar?>
@@ -21,10 +22,13 @@
    <children>
    <HBox maxWidth="-Infinity" spacing="3.0">
    <Button fx:id="uploadXMLButton" text="UploadXML" onAction="#uploadXML" layoutX="20" layoutY="20"/>
-      <Button fx:id="uploadCSVButton" text="Upload Time Data Series File (CSV)" onAction="#uploadCSV" layoutX="20" layoutY="20"/>
+   <Button fx:id="uploadCSVButton" text="Upload Time Data Series File (CSV)" onAction="#uploadCSV" layoutX="20" layoutY="20"/>
       
    </HBox>
-   
+   <HBox alignment="CENTER">
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="200.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+   </HBox>
      <HBox maxWidth="-Infinity" spacing="3.0">
          <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
          <graphic>
