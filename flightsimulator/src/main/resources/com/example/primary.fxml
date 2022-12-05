@@ -2,6 +2,7 @@
 
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.*?>
@@ -12,99 +13,163 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Rectangle?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.shape.Circle?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FileHandler">
-   <children>
-   <HBox maxWidth="-Infinity" spacing="3.0">
-   <Button fx:id="uploadXMLButton" text="UploadXML" onAction="#uploadXML" layoutX="20" layoutY="20"/>
-   <Button fx:id="uploadCSVButton" text="Upload Time Data Series File (CSV)" onAction="#uploadCSV" layoutX="20" layoutY="20"/>
-      
-   </HBox>
-   <HBox alignment="CENTER">
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="200.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-   </HBox>
-     <HBox maxWidth="-Infinity" spacing="3.0">
-         <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
-         <graphic>
-            <ImageView fx:id="BackToStartButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-               <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Skip-To-Start-icon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         </Button>
-         <Button fx:id = "BackwardButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
-         <graphic>
-            <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-               <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Rewind-icon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         </Button>
-         <Button fx:id="stopButton"  layoutX="5" layoutY="5">
-         <graphic>
-            <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-               <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/512/Media-Controls-Stop-icon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         </Button>
-         <Button fx:id="PlayButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
-         <graphic>
-            <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-               <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Play-icon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         </Button>
-         <Button fx:id = "PauseButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
-         <graphic>
-            <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-               <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Pause-icon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         </Button>
-         <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
-         <graphic>
-            <ImageView fx:id="ForwardButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" >
-               <image>
-               <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Fast-Forward-icon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         </Button>
-         <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#increaseProgress">
-         <graphic>
-            <ImageView fx:id="GoToEndButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-               <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-End-icon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-         </Button>
-        
-         
-         
-      </HBox>
-       <ProgressBar fx:id="myProgressBar" layoutX="20.0" layoutY="103.0" prefHeight="15.0" prefWidth="326.0" progress="0.7" />
-      
-      
-   </children>
-   <children>
-   
-   </children>
-
+<!-- Root VBox -->
+<VBox spacing="20" minWidth="500" maxWidth="-Infinity" alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FileHandler">
    <padding>
+     <Insets top="30" bottom="30" left="30" right="30"/>
    </padding>
+   <children>         
+         <!-- Upper HBox -->
+         <HBox fx:id="Upper_HBox" maxWidth="-Infinity" spacing="10">
+
+            <!-- Attributes List -->
+            <ListView fx:id="attributeList" minWidth="200" maxWidth="400" maxHeight="400"/>
+
+            <!-- Graphs VBox -->
+            <VBox fx:id="Graphs_VBox" minWidth="200" maxWidth="400" maxHeight="400">
+
+               <!-- Graph #1 and #2 HBox -->
+               <HBox fx:id="2_Graphs_HBox" styleClass="pink-text">
+
+                  <!-- First Graph -->
+                  <LineChart fx:id="lineChart" layoutX="14.0" layoutY="52.0" title="Graph #1" styleClass="pink-text">
+                     <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                       <NumberAxis side="LEFT" />
+                     </yAxis>
+                  </LineChart>
+
+                  <!-- Second Graph -->
+                  <LineChart fx:id="lineChart" layoutX="14.0" layoutY="52.0" title="Graph #2" styleClass="pink-text">
+                     <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis side="LEFT" />
+                     </yAxis>
+                  </LineChart>
+               </HBox>
+               
+               <!-- Third Graph -->
+               <LineChart fx:id="lineChart" layoutX="14.0" layoutY="52.0" title="Graph #3" styleClass="pink-text"><xAxis>
+                     <CategoryAxis side="BOTTOM" />
+                  </xAxis>
+                  <yAxis>
+                    <NumberAxis side="LEFT" />
+                  </yAxis>
+               </LineChart>
+
+            </VBox>
+
+            <!-- Joystick and clocks VBox -->
+            <VBox fx:id="Joystick_And_Clocks" minWidth="200" maxWidth="400">
+               <StackPane fx:id="joystickStack">
+                  <Circle fill="CE7777" radius="62" />
+                  <Circle fill="2B3A55" radius="60" />
+                  <Circle fill="CE7777" radius="30" />
+               </StackPane>
+               <StackPane fx:id="joystickStack">
+                  <Circle fill="CE7777" radius="62" />
+                  <Circle fill="2B3A55" radius="60" />
+                  <Circle fill="CE7777" radius="30" />
+               </StackPane>
+
+            </VBox>
+         </HBox>
+
+         <!-- Lower HBox -->
+         <HBox fx:id="Lower_HBox" alignment="CENTER_LEFT" maxWidth="-Infinity" spacing="10">
+            
+            <!-- CSV and XML Buttons -->
+            <VBox fx:id="FileButtons" minWidth="200" maxWidth="400" spacing="5">
+               <Button fx:id="uploadXML" alignment="CENTER" text="Upload XML" onAction="#uploadXML" prefHeight="40" prefWidth="200"/>
+               <Button fx:id="uploadCSV" alignment="CENTER" text="Upload CSV" onAction="#uploadCSV" prefHeight="40" prefWidth="200"/>
+            </VBox>
+            
+            <!-- Media Commands -->
+            <HBox fx:id="MediaControlsHBox" alignment="CENTER" maxWidth="-Infinity" spacing="3.0">
+               <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <graphic>
+                  <ImageView fx:id="BackToStartButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Skip-To-Start-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id = "BackwardButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Rewind-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id="stopButton"  layoutX="5" layoutY="5">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/512/Media-Controls-Stop-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id="PlayButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Play-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id = "PauseButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Pause-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <graphic>
+                  <ImageView fx:id="ForwardButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" >
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Fast-Forward-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#increaseProgress">
+               <graphic>
+                  <ImageView fx:id="GoToEndButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-End-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+            </HBox>
+
+            <Label alignment="CENTER" text="Play Speed: " styleClass="pink-text"/>
+            <Label alignment="CENTER" text="" minWidth="30" styleClass="white-background"/>
+            <Label alignment="CENTER" text="00:05:43" minWidth="30" styleClass="pink-text"/>
+         </HBox>
+
+         <!-- Time Slider -->
+         <Slider fx:id="TimeSlider" blockIncrement="0.1" layoutX="26.0" layoutY="32.0" majorTickUnit="1" max="10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
+   </children>
 </VBox>

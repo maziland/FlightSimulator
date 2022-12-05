@@ -1,2 +1,5 @@
 *.class
 .vscode/*
+fxml_arch.drawio
+flightsimulator/target/classes/*
+flightsimulator/target/classes/com/example/primary.fxml

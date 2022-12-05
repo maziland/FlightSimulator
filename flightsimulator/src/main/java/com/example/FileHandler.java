@@ -9,11 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javafx.fxml.FXML;
@@ -26,10 +23,10 @@ public class FileHandler implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        // TODO Auto-generated method stub
-        myProgressBar.setStyle("-fx-accent:red");
-        
+        // myProgressBar.setStyle("-fx-accent:red");
+
     }
+
     @FXML
     private ProgressBar myProgressBar;
 
@@ -37,11 +34,7 @@ public class FileHandler implements Initializable {
     private Button myButton;
 
     double progress;
-    
-    // final String xml_config_path = "src/main/config/config.xml";
 
-    // After pulling from git there are 2 Dirs named flightSimulator, a little
-    // patch:
     final String xml_config_path = "flightsimulator/src/main/config/config.xml";
     List<String> xmlColumnsNames;
     List<String> xmlNodes;
@@ -199,9 +192,7 @@ public class FileHandler implements Initializable {
         }
     }
 
-    
-    public void increaseProgress()
-    {
+    public void increaseProgress() {
         progress += 0.1;
         myProgressBar.setProgress(progress);
     }

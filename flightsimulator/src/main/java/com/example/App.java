@@ -17,7 +17,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 600, 600);
+        scene = new Scene(loadFXML("primary"), 1200, 800);
+        String css = this.getClass().getResource("myStyle.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Flight Simulator App");
         stage.setScene(scene);
         stage.show();
