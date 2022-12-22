@@ -15,7 +15,6 @@ public class MainViewModel {
 
     MainModel m;
     public ListProperty<String> attributesListProperty;
-    public DoubleProperty dp;
 
     public MainViewModel(MainModel m) {
         this.m = m;

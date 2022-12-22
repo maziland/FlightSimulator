@@ -13,9 +13,6 @@ import javafx.stage.FileChooser;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
 
 import com.example.viewmodel.MainViewModel;
 
@@ -32,15 +29,13 @@ public class MainView implements Initializable {
     @FXML
     private Button uploadCSV, uploadXML;
     @FXML
-    private ListView<String> attributesList;
-
-    // Properties to bind:
-    public ListProperty<String> attributesListProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ListView<String> attributeList;
 
     private MainViewModel vm;
 
     public void setViewModel(MainViewModel vm) {
         this.vm = vm;
+        this.attributeList.itemsProperty().bind(this.vm.attributesListProperty);
     }
 
     @Override
