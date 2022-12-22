@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import com.example.model.MainModel;
 
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

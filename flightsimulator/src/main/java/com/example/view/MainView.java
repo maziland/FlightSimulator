@@ -36,6 +36,17 @@ public class MainView implements Initializable {
     public void setViewModel(MainViewModel vm) {
         this.vm = vm;
         this.attributeList.itemsProperty().bind(this.vm.attributesListProperty);
+        this.set_startup_xml();
+    }
+
+    private void set_startup_xml() {
+        File start_xml = new File(xml_config_path);
+        boolean validated = this.vm.validateXML(start_xml);
+        if (validated) {
+            System.out.println("Startup XML verified successfully");
+        } else {
+            System.out.println("Cannot verify XML");
+        }
     }
 
     @Override
