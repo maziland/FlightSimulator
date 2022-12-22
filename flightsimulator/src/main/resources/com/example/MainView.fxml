@@ -23,7 +23,7 @@
 <?import javafx.scene.shape.Circle?>
 
 <!-- Root VBox -->
-<VBox spacing="20" minWidth="500" maxWidth="-Infinity" alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FileHandler">
+<VBox spacing="20" minWidth="500" maxWidth="-Infinity" alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.view.MainView">
    <padding>
      <Insets top="30" bottom="30" left="30" right="30"/>
    </padding>
@@ -153,7 +153,8 @@
                   </ImageView>
                </graphic>
                </Button>
-               <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#increaseProgress">
+               <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false"> 
+               <!-- onAction="#increaseProgress"> -->
                <graphic>
                   <ImageView fx:id="GoToEndButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
