@@ -9,36 +9,24 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.w3c.dom.*;
-
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javax.xml.parsers.*;
+import javafx.fxml.FXML;
+
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 
 public class MainModel {
 
+    final String xml_config_path = "flightsimulator/src/main/config/config.xml";
+    final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     List<String> xmlColumns;
     List<String> xmlNodes;
     public ListProperty<String> attributesListProperty;
-    public DoubleProperty dp;
+    public FlightSimulatorConnector fsc;
 
     public MainModel() {
         this.attributesListProperty = new SimpleListProperty<>();
-        this.dp = new SimpleDoubleProperty(4.0);
-        this.dp.set(5.0);
-        this.attributesListProperty.addListener((o, ov, nv) -> System.out.println("Changed on model"));
-        ChangeListener<ObservableList<String>> changeListener = new ChangeListener<ObservableList<String>>() {
-            @Override
-            public void changed(ObservableValue<? extends ObservableList<String>> observable,
-                    ObservableList<String> oldValue, ObservableList<String> newValue) {
-                System.out.println("Changed on m");
-            }
-        };
-        this.attributesListProperty.addListener(changeListener);
+        this.fsc = new FlightSimulatorConnector();
     }
 
     public List<String> getXmlColumns() {
@@ -55,7 +43,6 @@ public class MainModel {
          * 
          */
         try {
-            this.dp.set(5.0);
             boolean verified = true;
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -142,6 +129,41 @@ public class MainModel {
         } else {
             return false;
         }
+    }
+
+    public void runSimulator() throws IOException {
+        /*
+         * The function connects to the simulator and sends the flight data with the
+         * given delay
+         */
+        if (fsc.control.state == "") {
+            fsc.executeFlight();
+        }
+        fsc.control.state = fsc.run;
+    }
+
+    public void pauseSimulator() {
+        fsc.control.state = fsc.pause;
+    }
+
+    public void stopSimulator() {
+        fsc.control.state = fsc.stop;
+    }
+
+    public void forwardSimulator() {
+        fsc.control.state = fsc.forward;
+    }
+
+    public void backwardSimulator() {
+        fsc.control.state = fsc.backward;
+    }
+
+    public void tostartSimulator() {
+        fsc.control.state = fsc.tostart;
+    }
+
+    public void toendSimulator() {
+        fsc.control.state = fsc.toend;
     }
 
 }

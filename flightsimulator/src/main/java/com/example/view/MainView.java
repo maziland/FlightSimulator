@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
@@ -16,7 +18,7 @@ import javafx.scene.control.ListView;
 
 import com.example.viewmodel.MainViewModel;
 // TODO: remove - breaks MVVM
-import com.example.model.flightSimulatorConnector;
+import com.example.model.FlightSimulatorConnector;
 
 public class MainView implements Initializable {
 
@@ -113,38 +115,11 @@ public class MainView implements Initializable {
 
     }
 
-    flightSimulatorConnector fsc = new flightSimulatorConnector();
-
-    // TODO: remove - breaks MVVM
     @FXML
-    public void run() throws IOException {
-        /*
-         * The function connects to the simulator and sends the flight data with the
-         * given delay
-         */
-        if (fsc.control.state == "") {
-            fsc.executeFlight();
-        }
-        fsc.control.state = fsc.run;
+    public void controlButtonHandler(ActionEvent e) {
+        String id = ((Button) e.getSource()).getId();
+        this.vm.mediaCommand(id);
+
     }
 
-    public void pause() {
-        fsc.control.state = fsc.pause;
-    }
-
-    public void stop() {
-        fsc.control.state = fsc.stop;
-    }
-
-    public void forward() {
-        fsc.control.state = fsc.forward;
-    }
-
-    public void tostart() {
-        fsc.control.state = fsc.tostart;
-    }
-
-    public void toend() {
-        fsc.control.state = fsc.toend;
-    }
 }

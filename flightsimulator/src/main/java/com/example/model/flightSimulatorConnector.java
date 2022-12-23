@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class flightSimulatorConnector {
+public class FlightSimulatorConnector {
     public final Control control = new Control();
     public final String forward = "FORWARD";
     public final String backward = "BACKWARD";

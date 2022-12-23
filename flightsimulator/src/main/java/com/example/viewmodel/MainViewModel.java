@@ -32,4 +32,37 @@ public class MainViewModel {
         return this.m.validateCSV(file);
     }
 
+    public void mediaCommand(String buttonId) {
+        try {
+            switch (buttonId) {
+                case ("BackToStartButton"):
+                    this.m.tostartSimulator();
+                    break;
+                case ("BackwardButton"):
+                    this.m.backwardSimulator();
+                    break;
+                case ("stopButton"):
+                    this.m.stopSimulator();
+                    break;
+                case ("PlayButton"):
+                    this.m.runSimulator();
+                    break;
+                case ("PauseButton"):
+                    this.m.pauseSimulator();
+                    break;
+                case ("ForwardButton"):
+                    this.m.forwardSimulator();
+                    break;
+                case ("endButton"):
+                    this.m.toendSimulator();
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+
+    }
+
 }
