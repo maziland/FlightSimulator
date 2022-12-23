@@ -117,7 +117,7 @@
                   </ImageView>
                </graphic>
                </Button>
-               <Button fx:id="stopButton"  layoutX="5" layoutY="5">
+               <Button fx:id="stopButton"  layoutX="5" layoutY="5" onAction="#stop">
                <graphic>
                   <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -126,7 +126,7 @@
                   </ImageView>
                </graphic>
                </Button>
-               <Button fx:id="PlayButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <Button fx:id="PlayButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#run">
                <graphic>
                   <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -135,7 +135,7 @@
                   </ImageView>
                </graphic>
                </Button>
-               <Button fx:id = "PauseButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <Button fx:id = "PauseButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#pause">
                <graphic>
                   <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -144,17 +144,16 @@
                   </ImageView>
                </graphic>
                </Button>
-               <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <Button fx:id = "ForwardButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#forward">
                <graphic>
-                  <ImageView fx:id="ForwardButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" >
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" >
                      <image>
                      <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Fast-Forward-icon.png" />
                      </image>
                   </ImageView>
                </graphic>
                </Button>
-               <Button layoutX="104.0" layoutY="81.0" mnemonicParsing="false"> 
-               <!-- onAction="#increaseProgress"> -->
+               <Button fx:id="endButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#toend">
                <graphic>
                   <ImageView fx:id="GoToEndButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>

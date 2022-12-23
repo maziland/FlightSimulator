@@ -15,11 +15,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 import com.example.viewmodel.MainViewModel;
+// TODO: remove - breaks MVVM
+import com.example.model.flightSimulatorConnector;
 
 public class MainView implements Initializable {
 
     // regular variables
     final String xml_config_path = "flightsimulator/src/main/config/config.xml";
+    final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     List<String> xmlColumnsNames;
     List<String> xmlNodes;
 
@@ -100,12 +103,48 @@ public class MainView implements Initializable {
 
         boolean validated = this.vm.validateCSV(file);
         if (validated) {
-            // TODO: upload csv to server
+            Files.copy(file.toPath(), (new File(csv_config_path)).toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
             System.out.println("CSV Validated successfully");
         } else {
             // Show Errors...
             System.out.println("Cannot validate CSV");
         }
 
+    }
+
+    flightSimulatorConnector fsc = new flightSimulatorConnector();
+
+    // TODO: remove - breaks MVVM
+    @FXML
+    public void run() throws IOException {
+        /*
+         * The function connects to the simulator and sends the flight data with the
+         * given delay
+         */
+        if (fsc.control.state == "") {
+            fsc.executeFlight();
+        }
+        fsc.control.state = fsc.run;
+    }
+
+    public void pause() {
+        fsc.control.state = fsc.pause;
+    }
+
+    public void stop() {
+        fsc.control.state = fsc.stop;
+    }
+
+    public void forward() {
+        fsc.control.state = fsc.forward;
+    }
+
+    public void tostart() {
+        fsc.control.state = fsc.tostart;
+    }
+
+    public void toend() {
+        fsc.control.state = fsc.toend;
     }
 }
