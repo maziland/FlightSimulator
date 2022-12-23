@@ -41,7 +41,7 @@
                <HBox fx:id="2_Graphs_HBox" styleClass="pink-text">
 
                   <!-- First Graph -->
-                  <LineChart fx:id="lineChart" layoutX="14.0" layoutY="52.0" title="Graph #1" styleClass="pink-text">
+                  <LineChart fx:id="SelectedAttributeGraph" layoutX="14.0" layoutY="52.0" title="Selected Attribute" styleClass="pink-text">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" />
                      </xAxis>
@@ -51,7 +51,7 @@
                   </LineChart>
 
                   <!-- Second Graph -->
-                  <LineChart fx:id="lineChart" layoutX="14.0" layoutY="52.0" title="Graph #2" styleClass="pink-text">
+                  <LineChart fx:id="CorrelativeAttributeGraph" layoutX="14.0" layoutY="52.0" title="CorrelativeAttribute" styleClass="pink-text">
                      <xAxis>
                         <CategoryAxis side="BOTTOM" />
                      </xAxis>
@@ -62,7 +62,7 @@
                </HBox>
                
                <!-- Third Graph -->
-               <LineChart fx:id="lineChart" layoutX="14.0" layoutY="52.0" title="Graph #3" styleClass="pink-text"><xAxis>
+               <LineChart fx:id="AnomalieGraph" layoutX="14.0" layoutY="52.0" title="AnomalieGraph" styleClass="pink-text"><xAxis>
                      <CategoryAxis side="BOTTOM" />
                   </xAxis>
                   <yAxis>

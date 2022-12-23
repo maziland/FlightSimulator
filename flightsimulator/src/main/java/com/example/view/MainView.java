@@ -17,8 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 import com.example.viewmodel.MainViewModel;
-// TODO: remove - breaks MVVM
-import com.example.model.FlightSimulatorConnector;
 
 public class MainView implements Initializable {
 
@@ -56,7 +54,6 @@ public class MainView implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-
     }
 
     @FXML
@@ -112,14 +109,12 @@ public class MainView implements Initializable {
             // Show Errors...
             System.out.println("Cannot validate CSV");
         }
-
     }
 
     @FXML
     public void controlButtonHandler(ActionEvent e) {
         String id = ((Button) e.getSource()).getId();
         this.vm.mediaCommand(id);
-
     }
 
 }
