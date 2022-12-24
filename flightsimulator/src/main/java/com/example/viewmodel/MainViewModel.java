@@ -61,7 +61,7 @@ public class MainViewModel {
         this.m.uploadAlgorithm(file);
         ObservableList<String> algorithmsList = FXCollections.observableArrayList(this.m.getAlgorithms());
         algorithmsList.add("Upload Algorithm...");
-        this.attributesListProperty.set(algorithmsList);
+        this.algorithmsListProperty.set(algorithmsList);
     }
 
     public void mediaCommand(String buttonId) {

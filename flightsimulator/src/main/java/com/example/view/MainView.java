@@ -191,7 +191,7 @@ public class MainView implements Initializable {
             System.out.println("Uploaded the algorithm successfuly");
             this.algorithmsDropdown.getSelectionModel().selectFirst();
         } catch (Exception e) {
-            System.out.println(("There"));
+            System.err.println(e.toString());
             this.algorithmsDropdown.getSelectionModel().selectFirst();
         }
     }

@@ -53,15 +53,14 @@ public class MainModel {
         this.currentAlg = new CurrentAlgorithm(simpleDetector, "SimpleAnomalyDetector");
     }
 
-    public void uploadAlgorithm(File file)
-            throws Exception {
-        String filename = file.toPath().toString();
-        URLClassLoader loader = URLClassLoader.newInstance(new URL[] { new URL("file://" + file.toPath()) });
-        String className = filename.substring(0, filename.lastIndexOf('.'));
+    public void uploadAlgorithm(File file) throws Exception {
+        String className = "com.example.model.anomalies." + getFileNameWithoutExtension(file.toPath().toString());
+        String dirName = file.getParent().replaceAll("\\\\", "/"); // getFileDirectory(file.toPath().toString());
+
+        URLClassLoader loader = URLClassLoader.newInstance(new URL[] { new URL("file://" + dirName) });
         Class<?> c = loader.loadClass(className);
         TimeSeriesAnomalyDetector newAlg = (TimeSeriesAnomalyDetector) c.getDeclaredConstructor().newInstance();
         algorithmsMap.put(className, newAlg);
-
     }
 
     public void setCurrentAlgorithm(String name) {
@@ -219,4 +218,14 @@ public class MainModel {
         fsc.control.state = fsc.toend;
     }
 
+    public static String getFileNameWithoutExtension(String fileName) {
+        String[] splittedFileName = fileName.split("\\\\");
+        String simpleFileName = splittedFileName[splittedFileName.length - 1];
+        return simpleFileName.substring(0, simpleFileName.lastIndexOf('.'));
+    }
+
+    // public static String getFileDirectory(String fullPath) {
+    // String newName = fullPath.replaceAll("\\\\", "/");
+
+    // }
 }
