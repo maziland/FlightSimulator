@@ -6,17 +6,24 @@ import com.example.model.MainModel;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class MainViewModel {
 
     MainModel m;
+    final String xml_config_path = "flightsimulator/src/main/config/config.xml";
+    final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     public ListProperty<String> attributesListProperty;
+    public StringProperty selectedAttribute;
 
     public MainViewModel(MainModel m) {
         this.m = m;
         this.attributesListProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+        this.selectedAttribute = new SimpleStringProperty();
+        this.selectedAttribute.addListener((o, ov, nv) -> System.out.println("asdasd"));
     }
 
     public boolean validateXML(File file) {
@@ -29,7 +36,15 @@ public class MainViewModel {
     }
 
     public boolean validateCSV(File file) throws IOException {
-        return this.m.validateCSV(file);
+        if (this.m.validateCSV(file)) {
+            this.m.setTimeSeries(csv_config_path);
+            return true;
+        } else
+            return false;
+    }
+
+    public void uploadAlgorithm(File file) throws Exception {
+        this.m.uploadAlgorithm(file);
     }
 
     public void mediaCommand(String buttonId) {

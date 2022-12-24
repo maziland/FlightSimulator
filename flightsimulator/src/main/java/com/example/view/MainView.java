@@ -8,11 +8,14 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
@@ -25,6 +28,7 @@ public class MainView implements Initializable {
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     List<String> xmlColumnsNames;
     List<String> xmlNodes;
+    StringProperty selectedAttribute;
 
     // FXML variables
     @FXML
@@ -38,8 +42,11 @@ public class MainView implements Initializable {
 
     public void setViewModel(MainViewModel vm) {
         this.vm = vm;
+        this.selectedAttribute = new SimpleStringProperty();
         this.attributeList.itemsProperty().bind(this.vm.attributesListProperty);
+        this.vm.selectedAttribute.bind(this.selectedAttribute);
         this.set_startup_xml();
+        this.set_startup_csv();
     }
 
     private void set_startup_xml() {
@@ -49,6 +56,21 @@ public class MainView implements Initializable {
             System.out.println("Startup XML verified successfully");
         } else {
             System.out.println("Cannot verify XML");
+        }
+    }
+
+    private void set_startup_csv() {
+        File start_csv = new File(csv_config_path);
+        boolean validated = false;
+        try {
+            validated = this.vm.validateCSV(start_csv);
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+        if (validated) {
+            System.out.println("Startup CSV verified successfully");
+        } else {
+            System.out.println("Cannot verify CSV");
         }
     }
 
@@ -112,9 +134,34 @@ public class MainView implements Initializable {
     }
 
     @FXML
+    private void uploadAlgorithm() throws IOException {
+        FileChooser chooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Class files (*.class)", "*.class");
+        chooser.setTitle("Choose Class file");
+        chooser.getExtensionFilters().add(extFilter);
+        File file = chooser.showOpenDialog(null);
+
+        if (file == null)
+            return;
+
+        try {
+            this.vm.uploadAlgorithm(file);
+            System.out.println("Uploaded the algorithm successfuly");
+        } catch (Exception e) {
+            System.out.println(("There"));
+        }
+    }
+
+    @FXML
     public void controlButtonHandler(ActionEvent e) {
         String id = ((Button) e.getSource()).getId();
         this.vm.mediaCommand(id);
+    }
+
+    @FXML
+    public void listMouseClick(MouseEvent mevent) {
+        System.out.println("Clicked on " + attributeList.getSelectionModel().getSelectedItem());
+        this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
     }
 
 }

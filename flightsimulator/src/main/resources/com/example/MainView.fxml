@@ -32,7 +32,7 @@
          <HBox fx:id="Upper_HBox" maxWidth="-Infinity" spacing="10">
 
             <!-- Attributes List -->
-            <ListView fx:id="attributeList" minWidth="200" maxWidth="400" maxHeight="400"/>
+            <ListView fx:id="attributeList" minWidth="200" maxWidth="400" maxHeight="400" onMouseClicked="#listMouseClick"/>
 
             <!-- Graphs VBox -->
             <VBox fx:id="Graphs_VBox" minWidth="200" maxWidth="400" maxHeight="400">
@@ -62,7 +62,7 @@
                </HBox>
                
                <!-- Third Graph -->
-               <LineChart fx:id="AnomalieGraph" layoutX="14.0" layoutY="52.0" title="AnomalieGraph" styleClass="pink-text"><xAxis>
+               <LineChart fx:id="AnomaliesGraph" layoutX="14.0" layoutY="52.0" title="AnomaliesGraph" styleClass="pink-text"><xAxis>
                      <CategoryAxis side="BOTTOM" />
                   </xAxis>
                   <yAxis>
@@ -95,6 +95,7 @@
             <VBox fx:id="FileButtons" minWidth="200" maxWidth="400" spacing="5">
                <Button fx:id="uploadXML" alignment="CENTER" text="Upload XML" onAction="#uploadXML" prefHeight="40" prefWidth="200"/>
                <Button fx:id="uploadCSV" alignment="CENTER" text="Upload CSV" onAction="#uploadCSV" prefHeight="40" prefWidth="200"/>
+               <Button fx:id="uploadPlugin" alignment="CENTER" text="Upload Algorithm" onAction="#uploadAlgorithm" prefHeight="40" prefWidth="200"/>
             </VBox>
             
             <!-- Media Commands -->

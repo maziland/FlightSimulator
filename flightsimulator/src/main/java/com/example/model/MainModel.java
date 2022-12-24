@@ -4,33 +4,86 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import javafx.fxml.FXML;
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
+import com.example.model.anomalies.SimpleAnomalyDetector;
+import com.example.model.anomalies.TimeSeries;
+import com.example.model.anomalies.TimeSeriesAnomalyDetector;
+
+import javax.xml.parsers.*;
 
 public class MainModel {
+
+    private class CurrentAlgorithm {
+        private TimeSeriesAnomalyDetector alg;
+        private String name;
+
+        public CurrentAlgorithm(TimeSeriesAnomalyDetector alg, String name) {
+            this.name = name;
+            this.alg = alg;
+        }
+    }
 
     final String xml_config_path = "flightsimulator/src/main/config/config.xml";
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     List<String> xmlColumns;
     List<String> xmlNodes;
-    public ListProperty<String> attributesListProperty;
+
+    private CurrentAlgorithm currentAlg;
+    private HashMap<String, TimeSeriesAnomalyDetector> algorithmsMap;
     public FlightSimulatorConnector fsc;
+    public TimeSeries timeSeries;
 
     public MainModel() {
-        this.attributesListProperty = new SimpleListProperty<>();
+        this.algorithmsMap = new HashMap<>();
         this.fsc = new FlightSimulatorConnector();
+        setSimpleDetector();
+    }
+
+    private void setSimpleDetector() {
+        TimeSeriesAnomalyDetector simpleDetector = new SimpleAnomalyDetector();
+        this.algorithmsMap.put("SimpleAnomalyDetector", simpleDetector);
+        this.currentAlg = new CurrentAlgorithm(simpleDetector, "SimpleAnomalyDetector");
+    }
+
+    public void uploadAlgorithm(File file)
+            throws Exception {
+        String filename = file.toPath().toString();
+        URLClassLoader loader = URLClassLoader.newInstance(new URL[] { new URL("file://" + file.toPath()) });
+        String className = filename.substring(0, filename.lastIndexOf('.'));
+        Class<?> c = loader.loadClass(className);
+        TimeSeriesAnomalyDetector newAlg = (TimeSeriesAnomalyDetector) c.getDeclaredConstructor().newInstance();
+        algorithmsMap.put(className, newAlg);
+
+    }
+
+    public void setCurrentAlgorithm(String name) {
+        TimeSeriesAnomalyDetector alg = this.algorithmsMap.get(name);
+        this.currentAlg.name = name;
+        this.currentAlg.alg = alg;
+    }
+
+    public String getCurrentAlgorithm() {
+        return this.currentAlg.name;
+    }
+
+    public List<String> getAlgorithms() {
+        return new ArrayList<String>(this.algorithmsMap.keySet());
     }
 
     public List<String> getXmlColumns() {
         return this.xmlColumns;
+    }
+
+    public void setTimeSeries(String path) {
+        this.timeSeries = new TimeSeries(path);
     }
 
     public boolean validateXML(File file) {

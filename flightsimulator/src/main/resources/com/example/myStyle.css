@@ -1,5 +1,5 @@
 .button {
-    -fx-font-size: 15px;
+    -fx-font-size: 12px;
     -fx-background-color: #E8C4C4;
 }
 
@@ -22,7 +22,7 @@
 
 .pink-text {
     -fx-text-fill: #F2E5E5;
-    -fx-font-size: 16px;
+    -fx-font-size: 12px;
     -fx-text-alignment: "center";
 }
 
