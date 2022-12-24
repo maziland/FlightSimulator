@@ -16,14 +16,28 @@ public class MainViewModel {
     MainModel m;
     final String xml_config_path = "flightsimulator/src/main/config/config.xml";
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
-    public ListProperty<String> attributesListProperty;
-    public StringProperty selectedAttribute;
+    public ListProperty<String> attributesListProperty, algorithmsListProperty;
+    public StringProperty selectedAttribute, selectedAlgorithm;
 
     public MainViewModel(MainModel m) {
         this.m = m;
+        setAttributesListProperty();
+        setAlgorithmsListProperty();
+    }
+
+    public void setAttributesListProperty() {
         this.attributesListProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.selectedAttribute = new SimpleStringProperty();
         this.selectedAttribute.addListener((o, ov, nv) -> System.out.println("asdasd"));
+    }
+
+    public void setAlgorithmsListProperty() {
+        this.selectedAlgorithm = new SimpleStringProperty();
+        this.algorithmsListProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+        ObservableList<String> algorithmsList = FXCollections.observableArrayList(this.m.getAlgorithms());
+        algorithmsList.add("Upload Algorithm...");
+        this.algorithmsListProperty.set(algorithmsList);
+        this.selectedAlgorithm.addListener((o, ov, nv) -> System.out.println("basdasd"));
     }
 
     public boolean validateXML(File file) {
@@ -45,6 +59,9 @@ public class MainViewModel {
 
     public void uploadAlgorithm(File file) throws Exception {
         this.m.uploadAlgorithm(file);
+        ObservableList<String> algorithmsList = FXCollections.observableArrayList(this.m.getAlgorithms());
+        algorithmsList.add("Upload Algorithm...");
+        this.attributesListProperty.set(algorithmsList);
     }
 
     public void mediaCommand(String buttonId) {

@@ -17,7 +17,9 @@ import javafx.stage.FileChooser;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Control;
 
 import com.example.viewmodel.MainViewModel;
 
@@ -28,7 +30,7 @@ public class MainView implements Initializable {
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     List<String> xmlColumnsNames;
     List<String> xmlNodes;
-    StringProperty selectedAttribute;
+    StringProperty selectedAttribute, selectedAlgorithm;
 
     // FXML variables
     @FXML
@@ -37,14 +39,20 @@ public class MainView implements Initializable {
     private Button uploadCSV, uploadXML;
     @FXML
     private ListView<String> attributeList;
+    @FXML
+    private ComboBox<String> algorithmsDropdown;
 
     private MainViewModel vm;
 
     public void setViewModel(MainViewModel vm) {
         this.vm = vm;
         this.selectedAttribute = new SimpleStringProperty();
+        this.selectedAlgorithm = new SimpleStringProperty();
         this.attributeList.itemsProperty().bind(this.vm.attributesListProperty);
+        this.algorithmsDropdown.itemsProperty().bind(this.vm.algorithmsListProperty);
+        this.algorithmsDropdown.getSelectionModel().selectFirst();
         this.vm.selectedAttribute.bind(this.selectedAttribute);
+        this.vm.selectedAlgorithm.bind(this.selectedAlgorithm);
         this.set_startup_xml();
         this.set_startup_csv();
     }
@@ -134,25 +142,6 @@ public class MainView implements Initializable {
     }
 
     @FXML
-    private void uploadAlgorithm() throws IOException {
-        FileChooser chooser = new FileChooser();
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Class files (*.class)", "*.class");
-        chooser.setTitle("Choose Class file");
-        chooser.getExtensionFilters().add(extFilter);
-        File file = chooser.showOpenDialog(null);
-
-        if (file == null)
-            return;
-
-        try {
-            this.vm.uploadAlgorithm(file);
-            System.out.println("Uploaded the algorithm successfuly");
-        } catch (Exception e) {
-            System.out.println(("There"));
-        }
-    }
-
-    @FXML
     public void controlButtonHandler(ActionEvent e) {
         String id = ((Button) e.getSource()).getId();
         this.vm.mediaCommand(id);
@@ -160,8 +149,50 @@ public class MainView implements Initializable {
 
     @FXML
     public void listMouseClick(MouseEvent mevent) {
-        System.out.println("Clicked on " + attributeList.getSelectionModel().getSelectedItem());
-        this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
+        String id = ((Control) mevent.getSource()).getId();
+        switch (id) {
+            case ("algorithmsDropdown"):
+                System.out.println("click!");
+                String selected = algorithmsDropdown.getSelectionModel().getSelectedItem();
+                if (selected.equals("Upload Algorithm...")) {
+                    try {
+                        this.uploadAlgorithm();
+                    } catch (Exception e) {
+                        System.err.println("Failed uploading the algorithm");
+                        System.err.println(e.toString());
+                    }
+                } else {
+                    this.selectedAlgorithm.set(selected);
+                }
+                break;
+            case ("attributeList"):
+                this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
+                break;
+            default:
+                break;
+        }
+
     }
 
+    private void uploadAlgorithm() throws IOException {
+        FileChooser chooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Class files (*.class)", "*.class");
+        chooser.setTitle("Choose Class file");
+        chooser.getExtensionFilters().add(extFilter);
+        File file = chooser.showOpenDialog(null);
+
+        if (file == null) {
+            this.algorithmsDropdown.getSelectionModel().selectFirst();
+            return;
+        }
+
+        try {
+            this.vm.uploadAlgorithm(file);
+            System.out.println("Uploaded the algorithm successfuly");
+            this.algorithmsDropdown.getSelectionModel().selectFirst();
+        } catch (Exception e) {
+            System.out.println(("There"));
+            this.algorithmsDropdown.getSelectionModel().selectFirst();
+        }
+    }
 }
