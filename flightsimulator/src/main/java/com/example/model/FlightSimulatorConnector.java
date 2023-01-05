@@ -20,12 +20,12 @@ public class FlightSimulatorConnector {
     public final String tostart = "START";
 
     public class Control {
-        public volatile String state = "";
+        public volatile String state = ""; // control the state of the simulator
+        public volatile int delay = 1; // control the speed of the simulator
     }
 
     private String simulator_ip = "localhost";
     private int simulator_port = 5400;
-    private int default_delay = 1;
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
 
     class FlightConnector implements Runnable {
@@ -101,7 +101,7 @@ public class FlightSimulatorConnector {
                     out.println(simulator_data.get(index));
                     out.flush();
                     index = index + 1;
-                    Thread.sleep(default_delay * 10);
+                    Thread.sleep(control.delay * 10);
                 }
                 out.close();
                 in.close();
