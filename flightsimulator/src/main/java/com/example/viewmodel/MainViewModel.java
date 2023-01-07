@@ -5,11 +5,14 @@ import java.io.IOException;
 import com.example.model.MainModel;
 
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 public class MainViewModel {
 
@@ -18,20 +21,33 @@ public class MainViewModel {
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     public ListProperty<String> attributesListProperty, algorithmsListProperty;
     public StringProperty selectedAttribute, selectedAlgorithm;
+    public MapProperty<String, float[]> hashMap;
 
     public MainViewModel(MainModel m) {
         this.m = m;
-        setAttributesListProperty();
-        setAlgorithmsListProperty();
+        initAttributesListProperty();
+        initAlgorithmsListProperty();
     }
 
-    public void setAttributesListProperty() {
+    public void updateHashMap() {
+        if (this.hashMap == null)
+            this.hashMap = new SimpleMapProperty<>(FXCollections.observableHashMap());
+        ObservableMap<String, float[]> map = FXCollections.observableHashMap();
+        map.putAll(this.m.getTimeSeriesHashMap());
+        this.hashMap.set(map);
+    }
+
+    public String getCorrelatedFeature(String attr) {
+        return this.m.getCorrelatedFeature(attr);
+    }
+
+    public void initAttributesListProperty() {
         this.attributesListProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.selectedAttribute = new SimpleStringProperty();
         this.selectedAttribute.addListener((o, ov, nv) -> System.out.println("asdasd"));
     }
 
-    public void setAlgorithmsListProperty() {
+    public void initAlgorithmsListProperty() {
         this.selectedAlgorithm = new SimpleStringProperty();
         this.algorithmsListProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
         ObservableList<String> algorithmsList = FXCollections.observableArrayList(this.m.getAlgorithms());
@@ -52,6 +68,7 @@ public class MainViewModel {
     public boolean validateCSV(File file) throws IOException {
         if (this.m.validateCSV(file)) {
             this.m.setTimeSeries(csv_config_path);
+            updateHashMap();
             return true;
         } else
             return false;

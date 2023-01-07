@@ -38,8 +38,8 @@ public class MainModel {
 
     private CurrentAlgorithm currentAlg;
     private HashMap<String, TimeSeriesAnomalyDetector> algorithmsMap;
+    private TimeSeries timeSeries;
     public FlightSimulatorConnector fsc;
-    public TimeSeries timeSeries;
 
     public MainModel() {
         this.algorithmsMap = new HashMap<>();
@@ -83,6 +83,16 @@ public class MainModel {
 
     public void setTimeSeries(String path) {
         this.timeSeries = new TimeSeries(path);
+    }
+
+    public HashMap<String, float[]> getTimeSeriesHashMap() {
+        return this.timeSeries.map;
+    }
+
+    public String getCorrelatedFeature(String attr) {
+        if (this.timeSeries.correlatedFeatures.get(attr) != null)
+            return this.timeSeries.correlatedFeatures.get(attr).correlatedFeature;
+        return null;
     }
 
     public boolean validateXML(File file) {
@@ -224,8 +234,4 @@ public class MainModel {
         return simpleFileName.substring(0, simpleFileName.lastIndexOf('.'));
     }
 
-    // public static String getFileDirectory(String fullPath) {
-    // String newName = fullPath.replaceAll("\\\\", "/");
-
-    // }
 }

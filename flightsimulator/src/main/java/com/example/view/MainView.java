@@ -8,6 +8,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -16,6 +18,9 @@ import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -31,6 +36,7 @@ public class MainView implements Initializable {
     List<String> xmlColumnsNames;
     List<String> xmlNodes;
     StringProperty selectedAttribute, selectedAlgorithm;
+    MapProperty<String, float[]> hashMap;
 
     // FXML variables
     @FXML
@@ -42,12 +48,18 @@ public class MainView implements Initializable {
     @FXML
     private ComboBox<String> algorithmsDropdown;
 
+    private NumberAxis xAxis, yAxis;
+
+    @FXML
+    private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
+
     private MainViewModel vm;
 
     public void setViewModel(MainViewModel vm) {
         this.vm = vm;
         this.selectedAttribute = new SimpleStringProperty();
         this.selectedAlgorithm = new SimpleStringProperty();
+        this.hashMap = new SimpleMapProperty<>();
         this.attributeList.itemsProperty().bind(this.vm.attributesListProperty);
         this.algorithmsDropdown.itemsProperty().bind(this.vm.algorithmsListProperty);
         this.algorithmsDropdown.getSelectionModel().selectFirst();
@@ -55,6 +67,27 @@ public class MainView implements Initializable {
         this.vm.selectedAlgorithm.bind(this.selectedAlgorithm);
         this.set_startup_xml();
         this.set_startup_csv();
+        this.init_graphs();
+        this.vm.hashMap.bind(this.hashMap);
+    }
+
+    private void init_graphs() {
+        this.vm.updateHashMap();
+        this.xAxis = new NumberAxis();
+        this.yAxis = new NumberAxis();
+        this.xAxis.setLabel(("TimeSeries"));
+        this.yAxis.setLabel(("Value"));
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("My Series");
+        series.getData().add(new XYChart.Data<>(1, 2));
+        series.getData().add(new XYChart.Data<>(2, 4));
+        this.selectedAttributeGraph.getData().add(series);
+    };
+
+    private void updateGraphs() {
+        String selectedAttr = this.selectedAttribute.getValue();
+        String correlatedAttr = this.vm.getCorrelatedFeature(selectedAttr);
+        System.out.println("Corr: " + correlatedAttr);
     }
 
     private void set_startup_xml() {
@@ -167,6 +200,8 @@ public class MainView implements Initializable {
                 break;
             case ("attributeList"):
                 this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
+                updateGraphs();
+
                 break;
             default:
                 break;
