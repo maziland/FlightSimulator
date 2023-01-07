@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class FlightSimulatorConnector {
     public final Control control = new Control();
@@ -19,12 +20,12 @@ public class FlightSimulatorConnector {
     public final String tostart = "START";
 
     public class Control {
-        public volatile String state = "";
+        public volatile String state = ""; // control the state of the simulator
+        public volatile int delay = 1; // control the speed of the simulator
     }
 
     private String simulator_ip = "localhost";
     private int simulator_port = 5400;
-    private int default_delay = 1;
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
 
     class FlightConnector implements Runnable {
@@ -59,36 +60,48 @@ public class FlightSimulatorConnector {
 
             String line;
             try {
+                ArrayList<String> simulator_data = new ArrayList<String>();
+
                 while ((line = in.readLine()) != null) {
+                    simulator_data.add(line);
+                }
+                
+                int index = 0;
+                while(simulator_data.size() > index)
+                {
                     if (control.state == forward) {
                         control.state = "";
-                        Thread.sleep(default_delay * 10);
-                        continue;
-                    } else if (control.state == pause) {
+                        index = index + 1;
+                    } 
+                    else if (control.state == pause) {
                         while (control.state == pause) {
 
                         }
                     } else if (control.state == backward) {
-                        // TODO
-                    } else if (control.state == stop) {
+                        index = index - 1;
+                        control.state = "";
+                    } 
+                    else if (control.state == stop) {
                         out.close();
                         in.close();
                         fg.close();
                         control.state = "";
                         return;
-                    } else if (control.state == tostart) {
-                        in = new BufferedReader(new FileReader(csv_config_path));
+                    } 
+                    else if (control.state == tostart) {
+                        index = 0;
+                        control.state = "";
                         continue;
-                    } else if (control.state == toend) {
-                        String last_line = line;
-                        while ((line = in.readLine()) != null) {
-                            last_line = line;
-                        }
-                        line = last_line;
+                    } 
+                    else if (control.state == toend) {
+                        control.state = "";
+                        index = simulator_data.size();
+                        continue;
                     }
-                    out.println(line);
+                    out.println(simulator_data.get(index));
                     out.flush();
-                    Thread.sleep(default_delay * 10);
+                    index = index + 1;
+                    Thread.sleep(control.delay * 10);
                 }
                 out.close();
                 in.close();

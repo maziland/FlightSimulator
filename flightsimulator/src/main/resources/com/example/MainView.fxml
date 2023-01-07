@@ -102,16 +102,16 @@
             
             <!-- Media Commands -->
             <HBox fx:id="MediaControlsHBox" alignment="CENTER" maxWidth="-Infinity" spacing="3.0">
-               <Button fx:id="BackToStartButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <Button fx:id="BackToStartButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#controlButtonHandler">
                <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" >
                      <image>
                      <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Skip-To-Start-icon.png" />
                      </image>
                   </ImageView>
                </graphic>
                </Button>
-               <Button fx:id = "BackwardButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false">
+               <Button fx:id = "BackwardButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#controlButtonHandler">
                <graphic>
                   <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
