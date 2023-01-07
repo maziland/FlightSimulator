@@ -18,7 +18,7 @@
 <?import java.util.*?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.shape.Circle?>
@@ -43,9 +43,9 @@
                <HBox fx:id="2_Graphs_HBox" styleClass="pink-text">
 
                   <!-- First Graph -->
-                  <LineChart fx:id="SelectedAttributeGraph" layoutX="14.0" layoutY="52.0" title="Selected Attribute" styleClass="pink-text">
+                  <LineChart fx:id="selectedAttributeGraph" layoutX="14.0" layoutY="52.0" title="Selected Attribute" styleClass="pink-text">
                      <xAxis>
-                        <CategoryAxis side="BOTTOM" />
+                        <NumberAxis side="BOTTOM" />
                      </xAxis>
                      <yAxis>
                        <NumberAxis side="LEFT" />
@@ -53,9 +53,9 @@
                   </LineChart>
 
                   <!-- Second Graph -->
-                  <LineChart fx:id="CorrelativeAttributeGraph" layoutX="14.0" layoutY="52.0" title="CorrelativeAttribute" styleClass="pink-text">
+                  <LineChart fx:id="correlativeAttributeGraph" layoutX="14.0" layoutY="52.0" title="CorrelativeAttribute" styleClass="pink-text">
                      <xAxis>
-                        <CategoryAxis side="BOTTOM" />
+                        <NumberAxis side="BOTTOM" />
                      </xAxis>
                      <yAxis>
                         <NumberAxis side="LEFT" />
@@ -64,8 +64,8 @@
                </HBox>
                
                <!-- Third Graph -->
-               <LineChart fx:id="AnomaliesGraph" layoutX="14.0" layoutY="52.0" title="AnomaliesGraph" styleClass="pink-text"><xAxis>
-                     <CategoryAxis side="BOTTOM" />
+               <LineChart fx:id="anomaliesGraph" layoutX="14.0" layoutY="52.0" title="AnomaliesGraph" styleClass="pink-text"><xAxis>
+                     <NumberAxis side="BOTTOM" />
                   </xAxis>
                   <yAxis>
                     <NumberAxis side="LEFT" />
