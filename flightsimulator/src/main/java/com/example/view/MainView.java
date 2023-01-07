@@ -73,8 +73,9 @@ public class MainView implements Initializable {
         this.hashMap.bind(this.vm.hashMap);
         this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
         {
-            vm.timeSeriesHandler((int)newValue);
-        }
+            System.out.println(newValue.intValue());
+            vm.timeSeriesHandler(newValue.intValue());
+        });
     }
 
     private void init_graphs() {
