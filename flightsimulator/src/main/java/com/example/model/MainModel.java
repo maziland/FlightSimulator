@@ -90,6 +90,11 @@ public class MainModel {
         algorithmsMap.put(className, newAlg);
     }
 
+    public void changeSpeedTime(int newTime)
+    {
+        fsc.control.delay = newTime;
+    }
+
     public void setCurrentAlgorithm(String name) {
         TimeSeriesAnomalyDetector alg = this.algorithmsMap.get(name);
         this.currentAlg.name = name;

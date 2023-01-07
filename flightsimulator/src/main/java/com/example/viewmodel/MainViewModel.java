@@ -91,6 +91,10 @@ public class MainViewModel {
         this.m.changeTime(currentTime);
     }
 
+    public void setSpeedTime(int newTime)
+    {
+        this.m.changeSpeedTime(newTime);
+    }
     public void mediaCommand(String buttonId) {
         try {
             switch (buttonId) {

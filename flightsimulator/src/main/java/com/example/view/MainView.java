@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -53,6 +54,9 @@ public class MainView implements Initializable {
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
 
     @FXML
+    private TextField speedInput;
+
+    @FXML
     private Slider TimeSlider;
 
     private MainViewModel vm;
@@ -76,6 +80,16 @@ public class MainView implements Initializable {
         {
             System.out.println(newValue.intValue());
             vm.timeSliderHandler(newValue.intValue());
+        });
+        this.speedInput.textProperty().addListener((obs, oldValue, newValue) -> {
+            
+            try{
+                Integer.parseInt(newValue);
+                vm.setSpeedTime(Integer.parseInt(newValue));
+            }
+            catch(Exception e){
+                System.out.println("Only int values are supported");
+            }
         });
     }
 
