@@ -228,6 +228,11 @@ public class MainModel {
         fsc.control.state = fsc.toend;
     }
 
+    public void changeTime(int index)
+    {
+        fsc.control.index = index;
+    }
+
     public static String getFileNameWithoutExtension(String fileName) {
         String[] splittedFileName = fileName.split("\\\\");
         String simpleFileName = splittedFileName[splittedFileName.length - 1];

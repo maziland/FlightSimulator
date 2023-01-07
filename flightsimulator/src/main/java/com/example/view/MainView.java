@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -51,6 +52,9 @@ public class MainView implements Initializable {
     @FXML
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
 
+    @FXML
+    private Slider TimeSlider;
+
     private MainViewModel vm;
 
     public void setViewModel(MainViewModel vm) {
@@ -67,6 +71,10 @@ public class MainView implements Initializable {
         this.set_startup_csv();
         this.init_graphs();
         this.hashMap.bind(this.vm.hashMap);
+        this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
+        {
+            vm.timeSeriesHandler((int)newValue);
+        }
     }
 
     private void init_graphs() {
@@ -191,6 +199,7 @@ public class MainView implements Initializable {
         String id = ((Button) e.getSource()).getId();
         this.vm.mediaCommand(id);
     }
+
 
     @FXML
     public void listMouseClick(MouseEvent mevent) {

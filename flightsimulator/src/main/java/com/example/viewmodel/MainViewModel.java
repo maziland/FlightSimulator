@@ -81,6 +81,11 @@ public class MainViewModel {
         this.algorithmsListProperty.set(algorithmsList);
     }
 
+    public void timeSeriesHandler(int currentTime)
+    {
+        this.m.changeTime(currentTime);
+    }
+
     public void mediaCommand(String buttonId) {
         try {
             switch (buttonId) {
