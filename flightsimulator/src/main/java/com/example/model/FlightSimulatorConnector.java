@@ -22,6 +22,7 @@ public class FlightSimulatorConnector {
     public class Control {
         public volatile String state = ""; // control the state of the simulator
         public volatile int delay = 1; // control the speed of the simulator
+        public int index = 0;
     }
 
     private String simulator_ip = "localhost";
@@ -65,42 +66,36 @@ public class FlightSimulatorConnector {
                 while ((line = in.readLine()) != null) {
                     simulator_data.add(line);
                 }
-                
-                int index = 0;
-                while(simulator_data.size() > index)
-                {
+
+                while (simulator_data.size() > control.index) {
                     if (control.state == forward) {
                         control.state = "";
-                        index = index + 1;
-                    } 
-                    else if (control.state == pause) {
+                        control.index = control.index + 1;
+                    } else if (control.state == pause) {
                         while (control.state == pause) {
 
                         }
                     } else if (control.state == backward) {
-                        index = index - 1;
+                        control.index = control.index - 1;
                         control.state = "";
-                    } 
-                    else if (control.state == stop) {
+                    } else if (control.state == stop) {
                         out.close();
                         in.close();
                         fg.close();
                         control.state = "";
                         return;
-                    } 
-                    else if (control.state == tostart) {
-                        index = 0;
+                    } else if (control.state == tostart) {
+                        control.index = 0;
                         control.state = "";
                         continue;
-                    } 
-                    else if (control.state == toend) {
+                    } else if (control.state == toend) {
                         control.state = "";
-                        index = simulator_data.size();
+                        control.index = simulator_data.size();
                         continue;
                     }
-                    out.println(simulator_data.get(index));
+                    out.println(simulator_data.get(control.index));
                     out.flush();
-                    index = index + 1;
+                    control.index = control.index + 1;
                     Thread.sleep(control.delay * 10);
                 }
                 out.close();
