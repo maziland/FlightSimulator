@@ -2,8 +2,10 @@ package com.example.model;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -45,6 +47,31 @@ public class MainModel {
         this.algorithmsMap = new HashMap<>();
         this.fsc = new FlightSimulatorConnector();
         setSimpleDetector();
+    }
+
+    public int getfilesize()
+    {
+        BufferedReader in;
+        try {
+            in = new BufferedReader(new FileReader(csv_config_path));
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+            return 0;
+        }
+
+        String line;
+        int index = 0;
+        try {
+
+            while ((line = in.readLine()) != null) {
+                index += 1;
+            }
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
+        return index;
     }
 
     private void setSimpleDetector() {

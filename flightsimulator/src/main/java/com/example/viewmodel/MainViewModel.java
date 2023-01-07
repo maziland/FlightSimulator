@@ -29,6 +29,11 @@ public class MainViewModel {
         initAlgorithmsListProperty();
     }
 
+    public int getfilesize()
+    {
+        return this.m.getfilesize();
+    }
+
     public void updateHashMap() {
         if (this.hashMap == null)
             this.hashMap = new SimpleMapProperty<>(FXCollections.observableHashMap());
@@ -81,7 +86,7 @@ public class MainViewModel {
         this.algorithmsListProperty.set(algorithmsList);
     }
 
-    public void timeSeriesHandler(int currentTime)
+    public void timeSliderHandler(int currentTime)
     {
         this.m.changeTime(currentTime);
     }

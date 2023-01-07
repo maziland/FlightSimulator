@@ -66,6 +66,7 @@ public class FlightSimulatorConnector {
                 while ((line = in.readLine()) != null) {
                     simulator_data.add(line);
                 }
+                System.out.println("total rows:" + simulator_data.size());
 
                 while (simulator_data.size() > control.index) {
                     if (control.state == forward) {

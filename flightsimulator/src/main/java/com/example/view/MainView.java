@@ -71,10 +71,11 @@ public class MainView implements Initializable {
         this.set_startup_csv();
         this.init_graphs();
         this.hashMap.bind(this.vm.hashMap);
+        this.TimeSlider.setMax(this.vm.getfilesize()); // change this
         this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
         {
             System.out.println(newValue.intValue());
-            vm.timeSeriesHandler(newValue.intValue());
+            vm.timeSliderHandler(newValue.intValue());
         });
     }
 
