@@ -44,7 +44,7 @@ public class MainViewModel {
     public void initAttributesListProperty() {
         this.attributesListProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.selectedAttribute = new SimpleStringProperty();
-        this.selectedAttribute.addListener((o, ov, nv) -> System.out.println("asdasd"));
+        this.selectedAttribute.addListener((o, ov, nv) -> System.out.println("Selected Attribute Changed"));
     }
 
     public void initAlgorithmsListProperty() {
@@ -53,7 +53,7 @@ public class MainViewModel {
         ObservableList<String> algorithmsList = FXCollections.observableArrayList(this.m.getAlgorithms());
         algorithmsList.add("Upload Algorithm...");
         this.algorithmsListProperty.set(algorithmsList);
-        this.selectedAlgorithm.addListener((o, ov, nv) -> System.out.println("basdasd"));
+        this.selectedAlgorithm.addListener((o, ov, nv) -> System.out.println("Selected Algorithm Changed"));
     }
 
     public boolean validateXML(File file) {

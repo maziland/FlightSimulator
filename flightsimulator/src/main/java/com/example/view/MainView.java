@@ -48,8 +48,6 @@ public class MainView implements Initializable {
     @FXML
     private ComboBox<String> algorithmsDropdown;
 
-    private NumberAxis xAxis, yAxis;
-
     @FXML
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
 
@@ -68,26 +66,43 @@ public class MainView implements Initializable {
         this.set_startup_xml();
         this.set_startup_csv();
         this.init_graphs();
-        this.vm.hashMap.bind(this.hashMap);
+        this.hashMap.bind(this.vm.hashMap);
     }
 
     private void init_graphs() {
+        this.selectedAttributeGraph.setCreateSymbols(false);
+        this.correlativeAttributeGraph.setCreateSymbols(false);
+        this.anomaliesGraph.setCreateSymbols(false);
         this.vm.updateHashMap();
-        this.xAxis = new NumberAxis();
-        this.yAxis = new NumberAxis();
-        this.xAxis.setLabel(("TimeSeries"));
-        this.yAxis.setLabel(("Value"));
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("My Series");
-        series.getData().add(new XYChart.Data<>(1, 2));
-        series.getData().add(new XYChart.Data<>(2, 4));
-        this.selectedAttributeGraph.getData().add(series);
     };
 
-    private void updateGraphs() {
+    private void updateAllGraphs() {
         String selectedAttr = this.selectedAttribute.getValue();
         String correlatedAttr = this.vm.getCorrelatedFeature(selectedAttr);
-        System.out.println("Corr: " + correlatedAttr);
+        updateSpecificGraph(this.selectedAttributeGraph, selectedAttr);
+        updateSpecificGraph(this.correlativeAttributeGraph, correlatedAttr);
+    }
+
+    private void updateSpecificGraph(LineChart<Number, Number> graph, String attr) {
+
+        NumberAxis xAxis, yAxis;
+        xAxis = new NumberAxis();
+        yAxis = new NumberAxis();
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        float[] values = this.hashMap.valueAt(attr).getValue();
+        if (values == null) {
+            graph.getData().clear();
+            graph.setTitle("None");
+            return;
+        }
+        // TODO: set upper bound the max current value
+        for (int i = 1; i <= values.length; i++) {
+            series.getData().add(new XYChart.Data<>(i, values[i - 1]));
+        }
+        graph.getData().clear();
+        graph.setTitle(attr);
+        graph.getData().add(series);
+
     }
 
     private void set_startup_xml() {
@@ -200,7 +215,7 @@ public class MainView implements Initializable {
                 break;
             case ("attributeList"):
                 this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
-                updateGraphs();
+                updateAllGraphs();
 
                 break;
             default:
