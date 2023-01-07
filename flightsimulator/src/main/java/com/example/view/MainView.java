@@ -85,9 +85,6 @@ public class MainView implements Initializable {
 
     private void updateSpecificGraph(LineChart<Number, Number> graph, String attr) {
 
-        NumberAxis xAxis, yAxis;
-        xAxis = new NumberAxis();
-        yAxis = new NumberAxis();
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         float[] values = this.hashMap.valueAt(attr).getValue();
         if (values == null) {
@@ -95,7 +92,7 @@ public class MainView implements Initializable {
             graph.setTitle("None");
             return;
         }
-        // TODO: set upper bound the max current value
+        // TODO: set upper bound to the max current value
         for (int i = 1; i <= values.length; i++) {
             series.getData().add(new XYChart.Data<>(i, values[i - 1]));
         }
