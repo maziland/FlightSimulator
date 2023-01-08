@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import com.example.model.MainModel;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,11 +24,19 @@ public class MainViewModel {
     public ListProperty<String> attributesListProperty, algorithmsListProperty;
     public StringProperty selectedAttribute, selectedAlgorithm;
     public MapProperty<String, float[]> hashMap;
+    public IntegerProperty currentTimeStepProperty;
 
     public MainViewModel(MainModel m) {
         this.m = m;
+        initCurrentTimeStepProperty();
         initAttributesListProperty();
         initAlgorithmsListProperty();
+    }
+
+    public void initCurrentTimeStepProperty() {
+        this.currentTimeStepProperty = new SimpleIntegerProperty();
+        this.currentTimeStepProperty.bind(this.m.fsc.control.currentTimeStep);
+        this.currentTimeStepProperty.addListener((o, ov, nv) -> System.out.println("TS CHANGED!!!"));
     }
 
     public int getfilesize() {

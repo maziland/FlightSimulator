@@ -9,6 +9,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class FlightSimulatorConnector {
     public final Control control = new Control();
     public final String forward = "FORWARD";
@@ -23,6 +26,13 @@ public class FlightSimulatorConnector {
         public volatile String state = ""; // control the state of the simulator
         public volatile int delay = 1; // control the speed of the simulator
         public int index = 0;
+        public IntegerProperty currentTimeStep;
+
+        public Control() {
+            this.currentTimeStep = new SimpleIntegerProperty();
+            this.currentTimeStep.set(0);
+        }
+
     }
 
     private String simulator_ip = "localhost";
@@ -68,16 +78,18 @@ public class FlightSimulatorConnector {
                 }
                 System.out.println("total rows:" + simulator_data.size());
 
-                while (simulator_data.size() > control.index) {
+                while (simulator_data.size() > control.currentTimeStep.get()) {
                     if (control.state == forward) {
                         control.state = "";
-                        control.index = control.index + 1;
+                        // control.index = control.index + 1;
+                        control.currentTimeStep.set(control.currentTimeStep.get() + 1);
                     } else if (control.state == pause) {
                         while (control.state == pause) {
 
                         }
                     } else if (control.state == backward) {
-                        control.index = control.index - 1;
+                        // control.index = control.index - 1;
+                        control.currentTimeStep.set(control.currentTimeStep.get() - 1);
                         control.state = "";
                     } else if (control.state == stop) {
                         out.close();
@@ -86,17 +98,23 @@ public class FlightSimulatorConnector {
                         control.state = "";
                         return;
                     } else if (control.state == tostart) {
-                        control.index = 0;
+                        // control.index = 0;
+                        control.currentTimeStep.set(0);
                         control.state = "";
                         continue;
                     } else if (control.state == toend) {
                         control.state = "";
-                        control.index = simulator_data.size();
+                        // control.index = simulator_data.size();
+                        control.currentTimeStep.set(simulator_data.size());
                         continue;
                     }
-                    out.println(simulator_data.get(control.index));
+                    // out.println(simulator_data.get(control.index));
+                    out.println(simulator_data.get(control.currentTimeStep.get()));
                     out.flush();
-                    control.index = control.index + 1;
+                    // System.out.println("INDEX: " + control.index);
+                    System.out.println("IDX: " + control.currentTimeStep.get());
+                    // control.index = control.index + 1;
+                    control.currentTimeStep.set(control.currentTimeStep.get() + 1);
                     Thread.sleep(control.delay * 10);
                 }
                 out.close();

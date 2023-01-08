@@ -49,8 +49,7 @@ public class MainModel {
         setSimpleDetector();
     }
 
-    public int getfilesize()
-    {
+    public int getfilesize() {
         BufferedReader in;
         try {
             in = new BufferedReader(new FileReader(csv_config_path));
@@ -66,9 +65,7 @@ public class MainModel {
             while ((line = in.readLine()) != null) {
                 index += 1;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return 0;
         }
         return index;
@@ -90,8 +87,7 @@ public class MainModel {
         algorithmsMap.put(className, newAlg);
     }
 
-    public void changeSpeedTime(int newTime)
-    {
+    public void changeSpeedTime(int newTime) {
         fsc.control.delay = newTime;
     }
 
@@ -260,9 +256,9 @@ public class MainModel {
         fsc.control.state = fsc.toend;
     }
 
-    public void changeTime(int index)
-    {
-        fsc.control.index = index;
+    public void changeTime(int index) {
+        // fsc.control.index = index;
+        fsc.control.currentTimeStep.set(index);
     }
 
     public static String getFileNameWithoutExtension(String fileName) {
