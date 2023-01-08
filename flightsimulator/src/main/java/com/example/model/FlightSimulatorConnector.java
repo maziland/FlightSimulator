@@ -81,14 +81,12 @@ public class FlightSimulatorConnector {
                 while (simulator_data.size() > control.currentTimeStep.get()) {
                     if (control.state == forward) {
                         control.state = "";
-                        // control.index = control.index + 1;
                         control.currentTimeStep.set(control.currentTimeStep.get() + 1);
                     } else if (control.state == pause) {
                         while (control.state == pause) {
 
                         }
                     } else if (control.state == backward) {
-                        // control.index = control.index - 1;
                         control.currentTimeStep.set(control.currentTimeStep.get() - 1);
                         control.state = "";
                     } else if (control.state == stop) {
@@ -98,24 +96,18 @@ public class FlightSimulatorConnector {
                         control.state = "";
                         return;
                     } else if (control.state == tostart) {
-                        // control.index = 0;
                         control.currentTimeStep.set(0);
                         control.state = "";
                         continue;
                     } else if (control.state == toend) {
                         control.state = "";
-                        // control.index = simulator_data.size();
                         control.currentTimeStep.set(simulator_data.size());
                         continue;
                     }
-                    // out.println(simulator_data.get(control.index));
                     out.println(simulator_data.get(control.currentTimeStep.get()));
                     out.flush();
-                    // System.out.println("INDEX: " + control.index);
-                    System.out.println("IDX: " + control.currentTimeStep.get());
-                    // control.index = control.index + 1;
                     control.currentTimeStep.set(control.currentTimeStep.get() + 1);
-                    Thread.sleep(control.delay * 10);
+                    Thread.sleep(control.delay * 100);
                 }
                 out.close();
                 in.close();

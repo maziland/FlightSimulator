@@ -8,7 +8,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -22,7 +24,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -42,6 +43,8 @@ public class MainView implements Initializable {
     List<String> xmlNodes;
     StringProperty selectedAttribute, selectedAlgorithm;
     MapProperty<String, float[]> hashMap;
+
+    IntegerProperty currentTimeStepProperty;
 
     // FXML variables
     @FXML
@@ -66,6 +69,12 @@ public class MainView implements Initializable {
 
     public void setViewModel(MainViewModel vm) {
         this.vm = vm;
+        this.currentTimeStepProperty = new SimpleIntegerProperty();
+        this.currentTimeStepProperty.bind(this.vm.currentTimeStepProperty);
+        this.currentTimeStepProperty.addListener((o, ov, nv) -> updateAllGraphs());
+        // this.currentTimeStepProperty.addListener((o, ov, nv) ->
+        // System.out.println("asd"));
+
         this.selectedAttribute = new SimpleStringProperty();
         this.selectedAlgorithm = new SimpleStringProperty();
         this.hashMap = new SimpleMapProperty<>();
@@ -118,7 +127,7 @@ public class MainView implements Initializable {
             return;
         }
         // TODO: set upper bound to the max current value
-        for (int i = 1; i <= values.length; i++) {
+        for (int i = 1; i <= this.currentTimeStepProperty.get(); i++) {
             series.getData().add(new XYChart.Data<>(i, values[i - 1]));
         }
         graph.getData().clear();

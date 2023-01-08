@@ -36,7 +36,8 @@ public class MainViewModel {
     public void initCurrentTimeStepProperty() {
         this.currentTimeStepProperty = new SimpleIntegerProperty();
         this.currentTimeStepProperty.bind(this.m.fsc.control.currentTimeStep);
-        this.currentTimeStepProperty.addListener((o, ov, nv) -> System.out.println("TS CHANGED!!!"));
+        // this.currentTimeStepProperty.addListener((o, ov, nv) ->
+        // System.out.println("TS CHANGED!!!"));
     }
 
     public int getfilesize() {
