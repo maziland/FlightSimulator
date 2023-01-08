@@ -19,11 +19,14 @@ import javafx.stage.FileChooser;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Control;
@@ -76,18 +79,16 @@ public class MainView implements Initializable {
         this.init_graphs();
         this.hashMap.bind(this.vm.hashMap);
         this.TimeSlider.setMax(this.vm.getfilesize()); // change this
-        this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
-        {
+        this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println(newValue.intValue());
             vm.timeSliderHandler(newValue.intValue());
         });
         this.speedInput.textProperty().addListener((obs, oldValue, newValue) -> {
-            
-            try{
+
+            try {
                 Integer.parseInt(newValue);
                 vm.setSpeedTime(Integer.parseInt(newValue));
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("Only int values are supported");
             }
         });
@@ -201,11 +202,17 @@ public class MainView implements Initializable {
 
         boolean validated = this.vm.validateCSV(file);
         if (validated) {
+            // TODO: handle chaging CSV before replacing because it's used by the FSC
             Files.copy(file.toPath(), (new File(csv_config_path)).toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
+            Alert alert = new Alert(AlertType.NONE, "CSV validated successfuly", ButtonType.OK);
+            alert.setTitle("CSV Validated successfully");
+            alert.show();
             System.out.println("CSV Validated successfully");
         } else {
-            // Show Errors...
+            Alert alert = new Alert(AlertType.NONE, "CSV validation failed", ButtonType.OK);
+            alert.setTitle("Validation Failed");
+            alert.show();
             System.out.println("Cannot validate CSV");
         }
     }
@@ -215,7 +222,6 @@ public class MainView implements Initializable {
         String id = ((Button) e.getSource()).getId();
         this.vm.mediaCommand(id);
     }
-
 
     @FXML
     public void listMouseClick(MouseEvent mevent) {

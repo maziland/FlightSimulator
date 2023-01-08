@@ -29,8 +29,7 @@ public class MainViewModel {
         initAlgorithmsListProperty();
     }
 
-    public int getfilesize()
-    {
+    public int getfilesize() {
         return this.m.getfilesize();
     }
 
@@ -86,15 +85,14 @@ public class MainViewModel {
         this.algorithmsListProperty.set(algorithmsList);
     }
 
-    public void timeSliderHandler(int currentTime)
-    {
+    public void timeSliderHandler(int currentTime) {
         this.m.changeTime(currentTime);
     }
 
-    public void setSpeedTime(int newTime)
-    {
+    public void setSpeedTime(int newTime) {
         this.m.changeSpeedTime(newTime);
     }
+
     public void mediaCommand(String buttonId) {
         try {
             switch (buttonId) {
