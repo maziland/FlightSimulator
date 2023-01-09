@@ -8,7 +8,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -17,11 +20,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Control;
@@ -38,6 +45,8 @@ public class MainView implements Initializable {
     StringProperty selectedAttribute, selectedAlgorithm;
     MapProperty<String, float[]> hashMap;
 
+    IntegerProperty currentTimeStepProperty;
+
     // FXML variables
     @FXML
     private ProgressBar myProgressBar;
@@ -48,15 +57,30 @@ public class MainView implements Initializable {
     @FXML
     private ComboBox<String> algorithmsDropdown;
 
-    private NumberAxis xAxis, yAxis;
-
     @FXML
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
+
+    @FXML
+    private TextField speedInput;
+
+    @FXML
+    private Slider TimeSlider;
 
     private MainViewModel vm;
 
     public void setViewModel(MainViewModel vm) {
         this.vm = vm;
+        this.currentTimeStepProperty = new SimpleIntegerProperty();
+        this.currentTimeStepProperty.bind(this.vm.currentTimeStepProperty);
+        this.currentTimeStepProperty.addListener((o, ov, nv) -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    updateAllGraphs(false);
+                }
+            });
+        });
+
         this.selectedAttribute = new SimpleStringProperty();
         this.selectedAlgorithm = new SimpleStringProperty();
         this.hashMap = new SimpleMapProperty<>();
@@ -68,26 +92,72 @@ public class MainView implements Initializable {
         this.set_startup_xml();
         this.set_startup_csv();
         this.init_graphs();
-        this.vm.hashMap.bind(this.hashMap);
+        this.hashMap.bind(this.vm.hashMap);
+        this.TimeSlider.setMax(this.vm.getfilesize()); // change this
+        this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue.intValue());
+            vm.timeSliderHandler(newValue.intValue());
+        });
+        this.speedInput.textProperty().addListener((obs, oldValue, newValue) -> {
+
+            try {
+                Integer.parseInt(newValue);
+                vm.setSpeedTime(Integer.parseInt(newValue));
+            } catch (Exception e) {
+                System.out.println("Only int values are supported");
+            }
+        });
     }
 
     private void init_graphs() {
+        this.selectedAttributeGraph.setCreateSymbols(false);
+        this.selectedAttributeGraph.setAnimated(false);
+
+        this.correlativeAttributeGraph.setCreateSymbols(false);
+        this.correlativeAttributeGraph.setAnimated(false);
+
+        this.anomaliesGraph.setCreateSymbols(false);
         this.vm.updateHashMap();
-        this.xAxis = new NumberAxis();
-        this.yAxis = new NumberAxis();
-        this.xAxis.setLabel(("TimeSeries"));
-        this.yAxis.setLabel(("Value"));
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("My Series");
-        series.getData().add(new XYChart.Data<>(1, 2));
-        series.getData().add(new XYChart.Data<>(2, 4));
-        this.selectedAttributeGraph.getData().add(series);
     };
 
-    private void updateGraphs() {
+    private void updateAllGraphs(boolean attributeChanged) {
         String selectedAttr = this.selectedAttribute.getValue();
         String correlatedAttr = this.vm.getCorrelatedFeature(selectedAttr);
-        System.out.println("Corr: " + correlatedAttr);
+        updateSpecificGraph(this.selectedAttributeGraph, selectedAttr, attributeChanged);
+        updateSpecificGraph(this.correlativeAttributeGraph, correlatedAttr, attributeChanged);
+    }
+
+    private void updateSpecificGraph(LineChart<Number, Number> graph, String attr, boolean attributeChanged) {
+        XYChart.Series<Number, Number> series;
+
+        // In case we updateGraphs because the selectedAttribute changed, build the
+        // series from the ground up
+        if (attributeChanged) {
+            series = new XYChart.Series<>();
+            float[] values = this.hashMap.valueAt(attr).getValue();
+            if (values == null) {
+                graph.getData().clear();
+                graph.setTitle("None");
+                return;
+            }
+            // TODO: set upper bound to the max current value
+            for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
+                // TODO: fix reading value at [2175] location
+                series.getData().add(new XYChart.Data<>(i, values[i - 1]));
+            }
+            graph.getData().clear();
+            graph.setTitle(attr);
+            graph.getData().add(series);
+        }
+        // Otherwise, we update because of timeStep update - add only the neccessary
+        // data to the series - MUCH FASTER!
+        else {
+            series = graph.getData().get(0);
+            int index = this.currentTimeStepProperty.get();
+            // TODO: fix reading value at [2175] location
+            System.out.println("INDEX: " + index + "--VALUE: " + this.hashMap.valueAt(attr).getValue()[index - 1]);
+            series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
+        }
     }
 
     private void set_startup_xml() {
@@ -165,11 +235,17 @@ public class MainView implements Initializable {
 
         boolean validated = this.vm.validateCSV(file);
         if (validated) {
+            // TODO: handle chaging CSV before replacing because it's used by the FSC
             Files.copy(file.toPath(), (new File(csv_config_path)).toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
+            Alert alert = new Alert(AlertType.NONE, "CSV validated successfuly", ButtonType.OK);
+            alert.setTitle("CSV Validated successfully");
+            alert.show();
             System.out.println("CSV Validated successfully");
         } else {
-            // Show Errors...
+            Alert alert = new Alert(AlertType.NONE, "CSV validation failed", ButtonType.OK);
+            alert.setTitle("Validation Failed");
+            alert.show();
             System.out.println("Cannot validate CSV");
         }
     }
@@ -200,7 +276,7 @@ public class MainView implements Initializable {
                 break;
             case ("attributeList"):
                 this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
-                updateGraphs();
+                updateAllGraphs(true);
 
                 break;
             default:

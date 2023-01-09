@@ -168,7 +168,7 @@
             </HBox>
 
             <Label alignment="CENTER" text="Play Speed: " styleClass="pink-text"/>
-            <Label alignment="CENTER" text="" minWidth="30" styleClass="pink-bg"/>
+            <TextField fx:id="speedInput" alignment="CENTER" text="1" maxWidth="30" styleClass="pink-bg"/>
             <Label alignment="CENTER" text="00:05:43" minWidth="30" styleClass="pink-text"/>
          </HBox>
 
