@@ -8,6 +8,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -71,9 +72,14 @@ public class MainView implements Initializable {
         this.vm = vm;
         this.currentTimeStepProperty = new SimpleIntegerProperty();
         this.currentTimeStepProperty.bind(this.vm.currentTimeStepProperty);
-        this.currentTimeStepProperty.addListener((o, ov, nv) -> updateAllGraphs());
-        // this.currentTimeStepProperty.addListener((o, ov, nv) ->
-        // System.out.println("asd"));
+        this.currentTimeStepProperty.addListener((o, ov, nv) -> {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    updateAllGraphs(false);
+                }
+            });
+        });
 
         this.selectedAttribute = new SimpleStringProperty();
         this.selectedAlgorithm = new SimpleStringProperty();
@@ -105,35 +111,53 @@ public class MainView implements Initializable {
 
     private void init_graphs() {
         this.selectedAttributeGraph.setCreateSymbols(false);
+        this.selectedAttributeGraph.setAnimated(false);
+
         this.correlativeAttributeGraph.setCreateSymbols(false);
+        this.correlativeAttributeGraph.setAnimated(false);
+
         this.anomaliesGraph.setCreateSymbols(false);
         this.vm.updateHashMap();
     };
 
-    private void updateAllGraphs() {
+    private void updateAllGraphs(boolean attributeChanged) {
         String selectedAttr = this.selectedAttribute.getValue();
         String correlatedAttr = this.vm.getCorrelatedFeature(selectedAttr);
-        updateSpecificGraph(this.selectedAttributeGraph, selectedAttr);
-        updateSpecificGraph(this.correlativeAttributeGraph, correlatedAttr);
+        updateSpecificGraph(this.selectedAttributeGraph, selectedAttr, attributeChanged);
+        updateSpecificGraph(this.correlativeAttributeGraph, correlatedAttr, attributeChanged);
     }
 
-    private void updateSpecificGraph(LineChart<Number, Number> graph, String attr) {
+    private void updateSpecificGraph(LineChart<Number, Number> graph, String attr, boolean attributeChanged) {
+        XYChart.Series<Number, Number> series;
 
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        float[] values = this.hashMap.valueAt(attr).getValue();
-        if (values == null) {
+        // In case we updateGraphs because the selectedAttribute changed, build the
+        // series from the ground up
+        if (attributeChanged) {
+            series = new XYChart.Series<>();
+            float[] values = this.hashMap.valueAt(attr).getValue();
+            if (values == null) {
+                graph.getData().clear();
+                graph.setTitle("None");
+                return;
+            }
+            // TODO: set upper bound to the max current value
+            for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
+                // TODO: fix reading value at [2175] location
+                series.getData().add(new XYChart.Data<>(i, values[i - 1]));
+            }
             graph.getData().clear();
-            graph.setTitle("None");
-            return;
+            graph.setTitle(attr);
+            graph.getData().add(series);
         }
-        // TODO: set upper bound to the max current value
-        for (int i = 1; i <= this.currentTimeStepProperty.get(); i++) {
-            series.getData().add(new XYChart.Data<>(i, values[i - 1]));
+        // Otherwise, we update because of timeStep update - add only the neccessary
+        // data to the series - MUCH FASTER!
+        else {
+            series = graph.getData().get(0);
+            int index = this.currentTimeStepProperty.get();
+            // TODO: fix reading value at [2175] location
+            System.out.println("INDEX: " + index + "--VALUE: " + this.hashMap.valueAt(attr).getValue()[index - 1]);
+            series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
         }
-        graph.getData().clear();
-        graph.setTitle(attr);
-        graph.getData().add(series);
-
     }
 
     private void set_startup_xml() {
@@ -252,7 +276,7 @@ public class MainView implements Initializable {
                 break;
             case ("attributeList"):
                 this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
-                updateAllGraphs();
+                updateAllGraphs(true);
 
                 break;
             default:
