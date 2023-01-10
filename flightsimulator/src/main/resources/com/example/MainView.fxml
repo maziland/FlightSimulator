@@ -74,18 +74,92 @@
 
             </VBox>
 
-            <!-- Joystick and clocks VBox -->
-            <VBox fx:id="Joystick_And_Clocks" minWidth="200" maxWidth="400">
-               <StackPane fx:id="joystickStack">
-                  <Circle fill="CE7777" radius="62" />
-                  <Circle fill="2B3A55" radius="60" />
-                  <Circle fill="CE7777" radius="30" />
-               </StackPane>
-               <StackPane fx:id="joystickStack">
-                  <Circle fill="CE7777" radius="62" />
-                  <Circle fill="2B3A55" radius="60" />
-                  <Circle fill="CE7777" radius="30" />
-               </StackPane>
+            <!-- joystick and clocks -->
+            <VBox fx:id="Joystick_And_Clocks" maxWidth="400" minWidth="200">
+               <HBox>
+                  <Slider fx:id="rudder" orientation="VERTICAL" />
+                  <Pane fx:id="joystickStack">
+                     <Circle fill="CE7777" layoutX="24.0" radius="62" translateX="80.0" translateY="60" />
+                     <Circle fill="2B3A55" layoutX="24.0" radius="60" translateX="80.0" translateY="60" />
+                     <Circle fill="CE7777" layoutX="24.0" radius="30" translateX="80.0" translateY="60" />
+                  </Pane>
+               </HBox>
+               <Slider fx:id="throttle">
+               </Slider>
+               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+				<children>
+                  <Label fx:id="latitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                     </padding>
+					</Label>
+					<Label fx:id="longitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+						<font>
+							<Font size="36.0" />
+						</font>
+						<padding>
+							<Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+						</padding>
+						<HBox.margin>
+							<Insets left="8.0" />
+						</HBox.margin>
+					</Label>
+                  <Label fx:id="altitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets left="8.0" />
+                     </HBox.margin>
+                  </Label>
+				</children>
+					<VBox.margin>
+						<Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+					</VBox.margin>
+					<padding>
+					<Insets top="50.0" />
+					</padding>
+				</HBox>
+               <HBox alignment="TOP_CENTER">
+                  <children>
+                  <Label fx:id="roll" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                     </padding>
+					</Label>
+					<Label fx:id="pitch" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+						<font>
+							<Font size="36.0" />
+						</font>
+						<padding>
+							<Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+						</padding>
+						<HBox.margin>
+							<Insets left="8.0" />
+						</HBox.margin>
+					</Label>
+                  <Label fx:id="yawn" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets left="8.0" />
+                     </HBox.margin>
+                  </Label>
+				</children>
+               </HBox>
 
             </VBox>
          </HBox>

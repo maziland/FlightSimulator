@@ -19,6 +19,8 @@ import com.example.model.anomalies.SimpleAnomalyDetector;
 import com.example.model.anomalies.TimeSeries;
 import com.example.model.anomalies.TimeSeriesAnomalyDetector;
 
+import javafx.beans.property.IntegerProperty;
+
 import javax.xml.parsers.*;
 
 public class MainModel {
@@ -259,6 +261,26 @@ public class MainModel {
     public void changeTime(int index) {
         // fsc.control.index = index;
         fsc.control.currentTimeStep.set(index);
+    }
+
+    public float[] stabilizers_pose(IntegerProperty time)
+    {
+        // returns a float[] with all data in line of time
+        
+        float[] pos = new float[10];
+        int index = time.get();
+        pos[0] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/aileron[0]")))[index]; 
+        pos[1] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/elevator")))[index];
+        pos[2] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/rudder")))[index];
+        pos[3] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/engines/engine[0]/throttle")))[index];
+        pos[4] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/latitude-deg")))[index];
+        pos[5] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/longitude-deg")))[index];
+        pos[6] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/altitude-ft")))[index];
+        pos[7] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/roll-deg")))[index];
+        pos[8] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/pitch-deg")))[index];
+        pos[9] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/heading-deg")))[index];
+        
+        return pos;
     }
 
     public static String getFileNameWithoutExtension(String fileName) {

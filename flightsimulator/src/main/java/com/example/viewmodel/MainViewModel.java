@@ -104,6 +104,11 @@ public class MainViewModel {
         this.m.changeSpeedTime(newTime);
     }
 
+    public float[] joyStickPos()
+    {
+        return this.m.stabilizers_pose(currentTimeStepProperty);
+    }
+
     public void mediaCommand(String buttonId) {
         try {
             switch (buttonId) {

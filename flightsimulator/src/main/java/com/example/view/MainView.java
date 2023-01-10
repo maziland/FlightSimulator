@@ -6,7 +6,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.ResourceBundle; 
 
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -24,6 +24,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
@@ -32,6 +33,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 
 import com.example.viewmodel.MainViewModel;
 
@@ -57,6 +59,26 @@ public class MainView implements Initializable {
     @FXML
     private ComboBox<String> algorithmsDropdown;
 
+    @FXML 
+    private Circle joyStick;
+    @FXML
+    private Slider throttle;
+    @FXML
+    private Slider rudder;
+    @FXML
+    private Label latitude;
+    @FXML
+    private Label longitude;
+    @FXML
+    private Label altitude;
+    @FXML
+    private Label roll;
+    @FXML
+    private Label pitch;
+    @FXML
+    private Label yawn;
+
+
     @FXML
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
 
@@ -77,6 +99,7 @@ public class MainView implements Initializable {
                 @Override
                 public void run() {
                     updateAllGraphs(false);
+                    update_stabelizers();
                 }
             });
         });
@@ -283,6 +306,28 @@ public class MainView implements Initializable {
                 break;
         }
 
+    }
+
+    @FXML
+    private void update_stabelizers()
+    // Moves throttle and ruddle and joystick and changes dashboard data
+    {
+        float[] pos = this.vm.joyStickPos();
+        
+        // Setting joyStick and bars location
+        joyStick.setCenterX(pos[0]*30);
+        joyStick.setCenterY(pos[1]*30);
+        rudder.setValue(pos[2]*100);
+        throttle.setValue(pos[3]*100);
+
+        // Setting dashboard values
+        latitude.setText(Float.toString(pos[4]));
+        longitude.setText(Float.toString(pos[5]));
+        altitude.setText(Float.toString(pos[6]));
+        roll.setText(Float.toString(pos[7]));
+        pitch.setText(Float.toString(pos[8]));
+        yawn.setText(Float.toString(pos[9]));
+        
     }
 
     private void uploadAlgorithm() throws IOException {
