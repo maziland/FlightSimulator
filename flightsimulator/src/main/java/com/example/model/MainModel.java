@@ -35,7 +35,9 @@ public class MainModel {
         }
     }
 
-    final String xml_config_path = "flightsimulator/src/main/config/config.xml";
+    public static Object HashMap;
+
+    public final String xml_config_path = "flightsimulator/src/main/config/config.xml";
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     List<String> xmlColumns;
     List<String> xmlNodes;
