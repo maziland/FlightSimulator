@@ -104,8 +104,7 @@ public class MainViewModel {
         this.m.changeSpeedTime(newTime);
     }
 
-    public float[] joyStickPos()
-    {
+    public float[] joyStickPos() {
         return this.m.stabilizers_pose(currentTimeStepProperty);
     }
 

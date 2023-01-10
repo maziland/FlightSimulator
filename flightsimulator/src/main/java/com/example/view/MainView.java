@@ -6,7 +6,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.ResourceBundle; 
+import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -59,7 +59,7 @@ public class MainView implements Initializable {
     @FXML
     private ComboBox<String> algorithmsDropdown;
 
-    @FXML 
+    @FXML
     private Circle joyStick;
     @FXML
     private Slider throttle;
@@ -77,7 +77,6 @@ public class MainView implements Initializable {
     private Label pitch;
     @FXML
     private Label yawn;
-
 
     @FXML
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
@@ -313,12 +312,12 @@ public class MainView implements Initializable {
     // Moves throttle and ruddle and joystick and changes dashboard data
     {
         float[] pos = this.vm.joyStickPos();
-        
+
         // Setting joyStick and bars location
-        joyStick.setCenterX(pos[0]*30);
-        joyStick.setCenterY(pos[1]*30);
-        rudder.setValue(pos[2]*100);
-        throttle.setValue(pos[3]*100);
+        joyStick.setCenterX(pos[0] * 30);
+        joyStick.setCenterY(pos[1] * 30);
+        rudder.setValue(pos[2] * 100);
+        throttle.setValue(pos[3] * 100);
 
         // Setting dashboard values
         latitude.setText(Float.toString(pos[4]));
@@ -327,7 +326,7 @@ public class MainView implements Initializable {
         roll.setText(Float.toString(pos[7]));
         pitch.setText(Float.toString(pos[8]));
         yawn.setText(Float.toString(pos[9]));
-        
+
     }
 
     private void uploadAlgorithm() throws IOException {

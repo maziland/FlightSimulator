@@ -7,7 +7,6 @@ import java.util.List;
 public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	List<CorrelatedFeatures> correlatedFeatures = new ArrayList<CorrelatedFeatures>();
-	// private long anomaly_row;
 	public static float threshold = 0.90f;
 
 	public float getMaxOffset(Point[] points, Line lin_reg) {
@@ -34,7 +33,6 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return anomalyRows;
 	}
 
-	@Override
 	public void learnNormal(TimeSeries ts) {
 
 		HashMap<String, float[]> map = ts.map;

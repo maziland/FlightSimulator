@@ -81,7 +81,7 @@
                   <Pane fx:id="joystickStack">
                      <Circle fill="CE7777" layoutX="24.0" radius="62" translateX="80.0" translateY="60" />
                      <Circle fill="2B3A55" layoutX="24.0" radius="60" translateX="80.0" translateY="60" />
-                     <Circle fill="CE7777" layoutX="24.0" radius="30" translateX="80.0" translateY="60" />
+                     <Circle fx:id="joyStick" fill="CE7777" layoutX="24.0" radius="30" translateX="80.0" translateY="60" />
                   </Pane>
                </HBox>
                <Slider fx:id="throttle">
