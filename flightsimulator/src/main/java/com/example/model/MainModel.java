@@ -18,6 +18,7 @@ import org.w3c.dom.*;
 import com.example.model.anomalies.SimpleAnomalyDetector;
 import com.example.model.anomalies.TimeSeries;
 import com.example.model.anomalies.TimeSeriesAnomalyDetector;
+import com.example.model.anomalies.ZScoreAnomalyDetector;
 
 import javafx.beans.property.IntegerProperty;
 
@@ -50,7 +51,7 @@ public class MainModel {
     public MainModel() {
         this.algorithmsMap = new HashMap<>();
         this.fsc = new FlightSimulatorConnector();
-        setSimpleDetector();
+        createDefaultAnoamalyList();
     }
 
     public int getfilesize() {
@@ -75,9 +76,12 @@ public class MainModel {
         return index;
     }
 
-    private void setSimpleDetector() {
+    private void createDefaultAnoamalyList()
+    {
         TimeSeriesAnomalyDetector simpleDetector = new SimpleAnomalyDetector();
         this.algorithmsMap.put("SimpleAnomalyDetector", simpleDetector);
+        TimeSeriesAnomalyDetector zscoreDetector = new ZScoreAnomalyDetector();
+        this.algorithmsMap.put("ZScoreAnomalyDetector", zscoreDetector);
         this.currentAlg = new CurrentAlgorithm(simpleDetector, "SimpleAnomalyDetector");
     }
 

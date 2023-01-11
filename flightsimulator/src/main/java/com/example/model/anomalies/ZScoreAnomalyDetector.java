@@ -6,7 +6,6 @@ import java.util.List;
 
 public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
-	List<CorrelatedFeatures> correlatedFeatures = new ArrayList<CorrelatedFeatures>();
 	HashMap<String, Float> zscore_map = new HashMap();
 
 	public static float threshold = 0.90f;
