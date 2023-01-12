@@ -9,7 +9,7 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 	List<CorrelatedFeatures> correlatedFeatures = new ArrayList<CorrelatedFeatures>();
 	public static float threshold = 0.90f;
 
-	public float getMaxOffset(Point[] points, Line lin_reg) {
+	public static float getMaxOffset(Point[] points, Line lin_reg) {
 		float maxOffset = 0;
 		for (int point = 0; point < points.length; point++) {
 			float offset = StatLib.dev(points[point], lin_reg);

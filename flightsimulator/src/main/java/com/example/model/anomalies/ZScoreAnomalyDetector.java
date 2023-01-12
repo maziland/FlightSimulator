@@ -10,7 +10,7 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	public static float threshold = 0.90f;
 
-	public float GetAbsValue(float n)
+	public static float GetAbsValue(float n)
 	{
 		if (n > 0)
 			return n;
