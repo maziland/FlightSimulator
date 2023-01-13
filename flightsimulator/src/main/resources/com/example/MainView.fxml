@@ -88,17 +88,17 @@
                </Slider>
                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
 				<children>
-                  <Label fx:id="latitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                  <Label fx:id="latitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="false" minWidth="90" alignment="CENTER">
                      <font>
-                        <Font size="36.0" />
+                        <Font size="13.0" />
                      </font>
                      <padding>
                         <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
                      </padding>
 					</Label>
-					<Label fx:id="longitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+					<Label fx:id="longitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="false" minWidth="90" alignment="CENTER">
 						<font>
-							<Font size="36.0" />
+							<Font size="13.0" />
 						</font>
 						<padding>
 							<Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
@@ -107,9 +107,9 @@
 							<Insets left="8.0" />
 						</HBox.margin>
 					</Label>
-                  <Label fx:id="altitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                  <Label fx:id="altitude" prefHeight="63.0" prefWidth="62.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="false" minWidth="90" alignment="CENTER">
                      <font>
-                        <Font size="36.0" />
+                        <Font size="13.0" />
                      </font>
                      <padding>
                         <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
@@ -128,17 +128,17 @@
 				</HBox>
                <HBox alignment="TOP_CENTER">
                   <children>
-                  <Label fx:id="roll" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                  <Label fx:id="roll" prefHeight="63.0" prefWidth="62.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="false" minWidth="90" alignment="CENTER">
                      <font>
-                        <Font size="36.0" />
+                        <Font size="13.0" />
                      </font>
                      <padding>
                         <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
                      </padding>
 					</Label>
-					<Label fx:id="pitch" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+					<Label fx:id="pitch" prefHeight="63.0" prefWidth="62.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="false" minWidth="90" alignment="CENTER">
 						<font>
-							<Font size="36.0" />
+							<Font size="13.0" />
 						</font>
 						<padding>
 							<Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
@@ -147,9 +147,9 @@
 							<Insets left="8.0" />
 						</HBox.margin>
 					</Label>
-                  <Label fx:id="yawn" prefHeight="63.0" prefWidth="62.0" style="-fx-border-radius: 60; -fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                  <Label fx:id="yawn" prefHeight="63.0" prefWidth="62.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="false" minWidth="90" alignment="CENTER">
                      <font>
-                        <Font size="36.0" />
+                        <Font size="13.0" />
                      </font>
                      <padding>
                         <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />

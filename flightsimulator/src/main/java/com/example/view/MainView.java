@@ -164,7 +164,6 @@ public class MainView implements Initializable {
             }
             // TODO: set upper bound to the max current value
             for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
-                // TODO: fix reading value at [2175] location
                 series.getData().add(new XYChart.Data<>(i, values[i - 1]));
             }
             graph.getData().clear();
@@ -176,8 +175,8 @@ public class MainView implements Initializable {
         else {
             series = graph.getData().get(0);
             int index = this.currentTimeStepProperty.get();
-            // TODO: fix reading value at [2175] location
-            System.out.println("INDEX: " + index + "--VALUE: " + this.hashMap.valueAt(attr).getValue()[index - 1]);
+            if (index == 2174)
+                System.out.println(index);
             series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
         }
     }
@@ -320,12 +319,12 @@ public class MainView implements Initializable {
         throttle.setValue(pos[3] * 100);
 
         // Setting dashboard values
-        latitude.setText(Float.toString(pos[4]));
-        longitude.setText(Float.toString(pos[5]));
-        altitude.setText(Float.toString(pos[6]));
-        roll.setText(Float.toString(pos[7]));
-        pitch.setText(Float.toString(pos[8]));
-        yawn.setText(Float.toString(pos[9]));
+        latitude.setText(Float.toString(pos[4]).substring(0, Math.min(Float.toString(pos[4]).length(), 6)));
+        longitude.setText(Float.toString(pos[5]).substring(0, Math.min(Float.toString(pos[5]).length(), 6)));
+        altitude.setText(Float.toString(pos[6]).substring(0, Math.min(Float.toString(pos[6]).length(), 6)));
+        roll.setText(Float.toString(pos[7]).substring(0, Math.min(Float.toString(pos[7]).length(), 6)));
+        pitch.setText(Float.toString(pos[8]).substring(0, Math.min(Float.toString(pos[8]).length(), 6)));
+        yawn.setText(Float.toString(pos[9]).substring(0, Math.min(Float.toString(pos[9]).length(), 6)));
 
     }
 

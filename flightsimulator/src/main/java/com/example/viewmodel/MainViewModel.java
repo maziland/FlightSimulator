@@ -105,7 +105,7 @@ public class MainViewModel {
     }
 
     public float[] joyStickPos() {
-        return this.m.stabilizers_pose(currentTimeStepProperty);
+        return this.m.stabilizers_pose();
     }
 
     public void mediaCommand(String buttonId) {
