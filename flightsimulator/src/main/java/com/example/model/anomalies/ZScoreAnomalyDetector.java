@@ -75,10 +75,6 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 		// Run for each feature and calculate the 
 		for(int i=0; i<features.length; i++)
 		{
-
-			// Handle feature array 
-			float max_zscore = 0;
-
 			// Run for each value in the feature array
 			for(int j = 1; j < map.get(features[i]).length;j++)
 			{
@@ -97,9 +93,7 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 					AnomalyReport anom = new AnomalyReport(features[i], j);
 					anomalies.add(anom);
 				}
-
 			}
-			zscore_map.put(features[i], max_zscore);
 		}
 		return anomalies;
 	}

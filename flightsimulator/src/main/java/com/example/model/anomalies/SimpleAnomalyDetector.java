@@ -21,7 +21,7 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return maxOffset;
 	}
 
-	public ArrayList<Integer> getRowsWithHigherOffsets(Point[] points, Line lin_reg, float max_offset) {
+	public static ArrayList<Integer> getRowsWithHigherOffsets(Point[] points, Line lin_reg, float max_offset) {
 		ArrayList<Integer> anomalyRows = new ArrayList<Integer>();
 
 		for (int point = 0; point < points.length; point++) {
