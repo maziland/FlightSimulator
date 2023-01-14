@@ -2,6 +2,8 @@ package com.example.viewmodel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
 import com.example.model.MainModel;
 
 import javafx.beans.property.IntegerProperty;
@@ -54,6 +56,10 @@ public class MainViewModel {
 
     public String getCorrelatedFeature(String attr) {
         return this.m.getCorrelatedFeature(attr);
+    }
+
+    public List<Integer> getAnomliesTimeSteps() {
+        return this.m.anomaliesTimeSteps;
     }
 
     public void initAttributesListProperty() {

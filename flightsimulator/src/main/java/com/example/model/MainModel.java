@@ -2,7 +2,6 @@ package com.example.model;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
@@ -15,6 +14,7 @@ import java.util.Map;
 
 import org.w3c.dom.*;
 
+import com.example.model.anomalies.AnomalyReport;
 import com.example.model.anomalies.SimpleAnomalyDetector;
 import com.example.model.anomalies.TimeSeries;
 import com.example.model.anomalies.TimeSeriesAnomalyDetector;
@@ -34,21 +34,25 @@ public class MainModel {
         }
     }
 
+    // TODO: What for??????
     public static Object HashMap;
 
     public final String xml_config_path = "flightsimulator/src/main/config/config.xml";
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
+    final String normalFlightPath = "flightsimulator/src/main/config/reg_flight.csv";
     List<String> xmlColumns;
     List<String> xmlNodes;
 
     private CurrentAlgorithm currentAlg;
     private HashMap<String, TimeSeriesAnomalyDetector> algorithmsMap;
-    private TimeSeries timeSeries;
+    private TimeSeries timeSeries, normalFlight;
+    public List<Integer> anomaliesTimeSteps;
     public FlightSimulatorConnector fsc;
 
     public MainModel() {
         this.algorithmsMap = new HashMap<>();
         this.fsc = new FlightSimulatorConnector();
+        this.normalFlight = new TimeSeries(normalFlightPath);
         createDefaultAnoamalyList();
     }
 
@@ -60,15 +64,17 @@ public class MainModel {
 
     private void createDefaultAnoamalyList() {
         TimeSeriesAnomalyDetector simpleDetector = new SimpleAnomalyDetector();
+        simpleDetector.learnNormal(this.normalFlight);
         this.algorithmsMap.put("SimpleAnomalyDetector", simpleDetector);
         TimeSeriesAnomalyDetector zscoreDetector = new ZScoreAnomalyDetector();
+        zscoreDetector.learnNormal(this.normalFlight);
         this.algorithmsMap.put("ZScoreAnomalyDetector", zscoreDetector);
         this.currentAlg = new CurrentAlgorithm(simpleDetector, "SimpleAnomalyDetector");
     }
 
     public void uploadAlgorithm(File file) throws Exception {
         String className = "com.example.model.anomalies." + getFileNameWithoutExtension(file.toPath().toString());
-        String dirName = file.getParent().replaceAll("\\\\", "/"); // getFileDirectory(file.toPath().toString());
+        String dirName = file.getParent().replaceAll("\\\\", "/");
 
         URLClassLoader loader = URLClassLoader.newInstance(new URL[] { new URL("file://" + dirName) });
         Class<?> c = loader.loadClass(className);
@@ -84,6 +90,7 @@ public class MainModel {
         TimeSeriesAnomalyDetector alg = this.algorithmsMap.get(name);
         this.currentAlg.name = name;
         this.currentAlg.alg = alg;
+        detectAnomalies();
     }
 
     public String getCurrentAlgorithm() {
@@ -98,8 +105,18 @@ public class MainModel {
         return this.xmlColumns;
     }
 
+    public void detectAnomalies() {
+        List<AnomalyReport> anomalies = this.currentAlg.alg.detect(this.timeSeries);
+        List<Integer> anomaliesTimeSteps = new ArrayList<>();
+        for (AnomalyReport anom : anomalies) {
+            anomaliesTimeSteps.add((int) anom.timeStep);
+        }
+        this.anomaliesTimeSteps = anomaliesTimeSteps;
+    }
+
     public void setTimeSeries(String path) {
         this.timeSeries = new TimeSeries(path);
+        detectAnomalies();
     }
 
     public HashMap<String, float[]> getTimeSeriesHashMap() {
