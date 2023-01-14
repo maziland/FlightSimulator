@@ -44,12 +44,13 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 			for (int j = 1; j < map.get(features[i]).length; j++) {
 				float feature_avg = StatLib.avg(getSlice(map.get(features[i]), 0, j));
 				float feature_var = StatLib.var(getSlice(map.get(features[i]), 0, j));
+				float feature_standard_dev = (float) Math.sqrt((double) feature_var);
 
 				// Saves the current value to variable
 				float current_value = map.get(features[i])[j];
 
 				// Calculate Zscore
-				float feature_zscore = GetAbsValue(current_value - feature_avg) / feature_var;
+				float feature_zscore = GetAbsValue(current_value - feature_avg) / feature_standard_dev;
 
 				// Saves the maximum Zscore to variable
 				if (feature_zscore > max_zscore)
