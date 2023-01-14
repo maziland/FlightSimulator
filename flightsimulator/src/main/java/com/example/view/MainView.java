@@ -1,5 +1,7 @@
 package com.example.view;
 
+import com.example.util.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +27,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -109,6 +112,9 @@ public class MainView implements Initializable {
         this.selectedAlgorithm = new SimpleStringProperty();
         this.hashMap = new SimpleMapProperty<>();
         this.attributeList.itemsProperty().bind(this.vm.attributesListProperty);
+        this.algorithmsDropdown.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> {
+            this.selectedAlgorithm.set(nv);
+        });
         this.algorithmsDropdown.itemsProperty().bind(this.vm.algorithmsListProperty);
         this.algorithmsDropdown.getSelectionModel().selectFirst();
         this.vm.selectedAttribute.bind(this.selectedAttribute);
@@ -147,7 +153,6 @@ public class MainView implements Initializable {
     private void updateAllGraphs(boolean attributeChanged) {
         String selectedAttr = this.selectedAttribute.getValue();
         String correlatedAttr = this.vm.getCorrelatedFeature(selectedAttr);
-        String currentAlgorithm = this.selectedAlgorithm.getValue();
 
         // Update selected Attribute graph
         updateSpecificGraph(this.selectedAttributeGraph, selectedAttr, this.hashMap.valueAt(selectedAttr).getValue(),
@@ -158,27 +163,62 @@ public class MainView implements Initializable {
                 this.hashMap.valueAt(selectedAttr).getValue(), attributeChanged);
 
         // Update anomalies graph
-        updateAnomaliesGraph();
+        updateAnomaliesGraph(selectedAttr, correlatedAttr);
     }
 
-    private void updateAnomaliesGraph() {
+    private void updateAnomaliesGraph(String selectedAttr, String correlatedAttr) {
+
+        if (anomaliesGraph.getData().size() != 0)
+            return;
+        List<XYChart.Series<Number, Number>> seriesList;
+        seriesList = getAnomalyGraphSeriesList(selectedAttr, correlatedAttr);
+        for (XYChart.Series<Number, Number> series : seriesList) {
+            this.anomaliesGraph.getData().add(series);
+        }
+    }
+
+    private List<XYChart.Series<Number, Number>> getAnomalyGraphSeriesList(String selectedAttr, String correlatedAttr) {
+
+        List<XYChart.Series<Number, Number>> seriesList = new ArrayList<XYChart.Series<Number, Number>>();
+        XYChart.Series<Number, Number> selectedPointSeries, correlatedPointSeries, linRegSeries;
+        selectedPointSeries = new XYChart.Series<>();
+        correlatedPointSeries = new XYChart.Series<>();
+        linRegSeries = new XYChart.Series<>();
+
         if (this.selectedAlgorithm.getValue().equals("SimpleAnomalyDetector")) {
-            // Get linear regression
 
             // Get float[] of both attributes
+            float[] selectedProperties = this.hashMap.get(selectedAttr);
+            for (int i = 1; i < selectedProperties.length; i++) {
+                selectedPointSeries.getData().add(new XYChart.Data<Number, Number>(i, selectedProperties[i - 1]));
+            }
+
+            float[] correlatedProperties = this.hashMap.get(correlatedAttr);
+            for (int i = 1; i < correlatedProperties.length; i++) {
+                correlatedPointSeries.getData().add(new XYChart.Data<Number, Number>(i, correlatedProperties[i - 1]));
+            }
+
+            // Get linear regression
+            Point[] pointsArr = StatLib.createPointsArray(selectedProperties, correlatedProperties);
+            Line linReg = StatLib.linear_reg(pointsArr);
+
+            for (int i = 1; i < pointsArr.length; i++) {
+                linRegSeries.getData().add(new XYChart.Data<Number, Number>(i, (linReg.a * i) + linReg.b));
+            }
 
             // Get anomalies time step
+            Circle redCircle = new Circle(3);
+            redCircle.setFill(Color.RED);
+            List<Integer> anomaliesTimeSteps = this.vm.getAnomliesTimeSteps();
+            for (Integer timeStep : anomaliesTimeSteps) {
+                XYChart.Data<Number, Number> point = selectedPointSeries.getData().get(timeStep);
+                point.setNode(redCircle);
+            }
         }
-        List<XYChart.Series<Number, Number>> seriesList;
-
-        seriesList = getAnomalyGraphSeriesList();
-    }
-
-    private List<XYChart.Series<Number, Number>> getAnomalyGraphSeriesList() {
-        List<XYChart.Series<Number, Number>> seriesList = new ArrayList<XYChart.Series<Number, Number>>();
-        List<Integer> anomaliesTimeSteps = this.vm.getAnomliesTimeSteps();
-
-        return null;
+        seriesList.add(selectedPointSeries);
+        seriesList.add(correlatedPointSeries);
+        seriesList.add(linRegSeries);
+        return seriesList;
     }
 
     private void updateSpecificGraph(LineChart<Number, Number> graph, String attr, float[] values,
@@ -205,7 +245,7 @@ public class MainView implements Initializable {
 
         // Otherwise, we update because of timeStep update - add only the neccessary
         // data to the series - MUCH FASTER!
-        else {
+        else if (graph.getData().size() != 0) {
             series = graph.getData().get(0);
             int index = this.currentTimeStepProperty.get();
             series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
@@ -313,7 +353,6 @@ public class MainView implements Initializable {
         String id = ((Control) mevent.getSource()).getId();
         switch (id) {
             case ("algorithmsDropdown"):
-                System.out.println("click!");
                 String selected = algorithmsDropdown.getSelectionModel().getSelectedItem();
                 if (selected.equals("Upload Algorithm...")) {
                     try {
@@ -329,7 +368,6 @@ public class MainView implements Initializable {
             case ("attributeList"):
                 this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
                 updateAllGraphs(true);
-
                 break;
             default:
                 break;
