@@ -1,5 +1,7 @@
 package com.example.model.anomalies;
 
+import com.example.util.*;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

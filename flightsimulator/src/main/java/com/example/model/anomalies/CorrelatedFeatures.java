@@ -1,5 +1,7 @@
 package com.example.model.anomalies;
 
+import com.example.util.*;
+
 public class CorrelatedFeatures {
 	public final String feature1, feature2;
 	public final float corrlation;
