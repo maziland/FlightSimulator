@@ -320,6 +320,7 @@ public class MainView implements Initializable {
         throttle.setValue(pos[3] * 100);
 
         // Setting dashboard values
+        System.out.println(Float.toString(pos[4]));
         latitude.setText(Float.toString(pos[4]));
         longitude.setText(Float.toString(pos[5]));
         altitude.setText(Float.toString(pos[6]));

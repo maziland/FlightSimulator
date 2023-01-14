@@ -24,11 +24,11 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
         ZScoreAnomalyDetector zs = new ZScoreAnomalyDetector();
-        TimeSeries ts = new TimeSeries("/Users/oranmoyal/Documents/FlightSimulator/FlightSimulator/flightsimulator/src/main/config/flight.csv");
+        TimeSeries ts = new TimeSeries("flightsimulator/src/main/config/flight.csv");
         zs.learnNormal(ts);
-        /*
+        
+        
         try {
 
             MainModel m = new MainModel(); // Model
@@ -51,7 +51,7 @@ public class App extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-         */
+         
     }
 
     static void setRoot(String fxml) throws IOException {

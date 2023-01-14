@@ -131,7 +131,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				for(int j = 1; j < map.get(features[i]).length;j++)
 				{
 					int correlated_feature_second_index = correlated_map_circle.get(features[i]);
-					Point p = new Point(map.get(features[i])[j], map.get(features[correlated_feature_second_index])[j]));
+					Point p = new Point(map.get(features[i])[j], map.get(features[correlated_feature_second_index])[j]);
 					if (!c.contains(p))
 					{
 						AnomalyReport anom = new AnomalyReport(features[i] + "-" + features[correlated_feature_second_index], i);
