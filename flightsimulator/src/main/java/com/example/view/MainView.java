@@ -352,12 +352,13 @@ public class MainView implements Initializable {
         throttle.setValue(pos[3] * 100);
 
         // Setting dashboard values
-        latitude.setText(Float.toString(pos[4]).substring(0, Math.min(Float.toString(pos[4]).length(), 6)));
-        longitude.setText(Float.toString(pos[5]).substring(0, Math.min(Float.toString(pos[5]).length(), 6)));
-        altitude.setText(Float.toString(pos[6]).substring(0, Math.min(Float.toString(pos[6]).length(), 6)));
-        roll.setText(Float.toString(pos[7]).substring(0, Math.min(Float.toString(pos[7]).length(), 6)));
-        pitch.setText(Float.toString(pos[8]).substring(0, Math.min(Float.toString(pos[8]).length(), 6)));
-        yawn.setText(Float.toString(pos[9]).substring(0, Math.min(Float.toString(pos[9]).length(), 6)));
+        System.out.println(Float.toString(pos[4]));
+        latitude.setText(Float.toString(pos[4]));
+        longitude.setText(Float.toString(pos[5]));
+        altitude.setText(Float.toString(pos[6]));
+        roll.setText(Float.toString(pos[7]));
+        pitch.setText(Float.toString(pos[8]));
+        yawn.setText(Float.toString(pos[9]));
 
     }
 
