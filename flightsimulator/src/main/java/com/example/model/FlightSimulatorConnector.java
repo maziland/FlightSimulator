@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
@@ -45,26 +44,32 @@ public class FlightSimulatorConnector {
             Socket fg;
             try {
                 fg = new Socket(simulator_ip, simulator_port);
-            } catch (UnknownHostException e) {
-                System.out.println(e.toString());
-                return;
-            } catch (IOException e) {
-                System.out.println(e.toString());
-                return;
             } catch (Exception e) {
                 return;
             }
+
             BufferedReader in;
             PrintWriter out;
             try {
                 in = new BufferedReader(new FileReader(csv_config_path));
             } catch (FileNotFoundException e1) {
+                try {
+                    fg.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 e1.printStackTrace();
                 return;
             }
             try {
                 out = new PrintWriter(fg.getOutputStream());
             } catch (IOException e1) {
+                try {
+                    fg.close();
+                    in.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 e1.printStackTrace();
                 return;
             }
@@ -76,6 +81,7 @@ public class FlightSimulatorConnector {
                 while ((line = in.readLine()) != null) {
                     simulator_data.add(line);
                 }
+                simulator_data.remove(0);
                 System.out.println("total rows:" + simulator_data.size());
 
                 while (simulator_data.size() > control.currentTimeStep.get()) {

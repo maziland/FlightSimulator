@@ -164,7 +164,6 @@ public class MainView implements Initializable {
             }
             // TODO: set upper bound to the max current value
             for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
-                // TODO: fix reading value at [2175] location
                 series.getData().add(new XYChart.Data<>(i, values[i - 1]));
             }
             graph.getData().clear();
@@ -176,8 +175,8 @@ public class MainView implements Initializable {
         else {
             series = graph.getData().get(0);
             int index = this.currentTimeStepProperty.get();
-            // TODO: fix reading value at [2175] location
-            System.out.println("INDEX: " + index + "--VALUE: " + this.hashMap.valueAt(attr).getValue()[index - 1]);
+            if (index == 2174)
+                System.out.println(index);
             series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
         }
     }

@@ -5,13 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.*;
 
@@ -19,8 +19,6 @@ import com.example.model.anomalies.SimpleAnomalyDetector;
 import com.example.model.anomalies.TimeSeries;
 import com.example.model.anomalies.TimeSeriesAnomalyDetector;
 import com.example.model.anomalies.ZScoreAnomalyDetector;
-
-import javafx.beans.property.IntegerProperty;
 
 import javax.xml.parsers.*;
 
@@ -55,29 +53,12 @@ public class MainModel {
     }
 
     public int getfilesize() {
-        BufferedReader in;
-        try {
-            in = new BufferedReader(new FileReader(csv_config_path));
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-            return 0;
-        }
-
-        String line;
-        int index = 0;
-        try {
-
-            while ((line = in.readLine()) != null) {
-                index += 1;
-            }
-        } catch (Exception e) {
-            return 0;
-        }
-        return index;
+        Map.Entry<String, float[]> entry = this.timeSeries.map.entrySet().iterator().next();
+        int length = entry.getValue().length;
+        return length;
     }
 
-    private void createDefaultAnoamalyList()
-    {
+    private void createDefaultAnoamalyList() {
         TimeSeriesAnomalyDetector simpleDetector = new SimpleAnomalyDetector();
         this.algorithmsMap.put("SimpleAnomalyDetector", simpleDetector);
         TimeSeriesAnomalyDetector zscoreDetector = new ZScoreAnomalyDetector();
@@ -269,23 +250,23 @@ public class MainModel {
         fsc.control.currentTimeStep.set(index);
     }
 
-    public float[] stabilizers_pose(IntegerProperty time)
-    {
+    public float[] stabilizers_pose() {
         // returns a float[] with all data in line of time
-        
+
         float[] pos = new float[10];
-        int index = time.get();
-        pos[0] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/aileron[0]")))[index]; 
-        pos[1] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/elevator")))[index];
-        pos[2] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/rudder")))[index];
-        pos[3] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/engines/engine[0]/throttle")))[index];
-        pos[4] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/latitude-deg")))[index];
-        pos[5] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/longitude-deg")))[index];
-        pos[6] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/altitude-ft")))[index];
-        pos[7] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/roll-deg")))[index];
-        pos[8] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/pitch-deg")))[index];
-        pos[9] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/heading-deg")))[index];
-        
+        int index = this.fsc.control.currentTimeStep.get();
+        pos[0] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/aileron[0]")))[index - 1];
+        pos[1] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/elevator")))[index - 1];
+        pos[2] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/controls/flight/rudder")))[index - 1];
+        pos[3] = this.timeSeries.map
+                .get(xmlColumns.get(xmlNodes.indexOf("/controls/engines/engine[0]/throttle")))[index - 1];
+        pos[4] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/latitude-deg")))[index - 1];
+        pos[5] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/longitude-deg")))[index - 1];
+        pos[6] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/position/altitude-ft")))[index - 1];
+        pos[7] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/roll-deg")))[index - 1];
+        pos[8] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/pitch-deg")))[index - 1];
+        pos[9] = this.timeSeries.map.get(xmlColumns.get(xmlNodes.indexOf("/orientation/heading-deg")))[index - 1];
+
         return pos;
     }
 
