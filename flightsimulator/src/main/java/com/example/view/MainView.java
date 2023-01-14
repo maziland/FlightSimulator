@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -27,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -145,18 +147,48 @@ public class MainView implements Initializable {
     private void updateAllGraphs(boolean attributeChanged) {
         String selectedAttr = this.selectedAttribute.getValue();
         String correlatedAttr = this.vm.getCorrelatedFeature(selectedAttr);
-        updateSpecificGraph(this.selectedAttributeGraph, selectedAttr, attributeChanged);
-        updateSpecificGraph(this.correlativeAttributeGraph, correlatedAttr, attributeChanged);
+        String currentAlgorithm = this.selectedAlgorithm.getValue();
+
+        // Update selected Attribute graph
+        updateSpecificGraph(this.selectedAttributeGraph, selectedAttr, this.hashMap.valueAt(selectedAttr).getValue(),
+                attributeChanged);
+
+        // Update correlated Attribute graph
+        updateSpecificGraph(this.correlativeAttributeGraph, correlatedAttr,
+                this.hashMap.valueAt(selectedAttr).getValue(), attributeChanged);
+
+        // Update anomalies graph
+        updateAnomaliesGraph();
     }
 
-    private void updateSpecificGraph(LineChart<Number, Number> graph, String attr, boolean attributeChanged) {
+    private void updateAnomaliesGraph() {
+        if (this.selectedAlgorithm.getValue().equals("SimpleAnomalyDetector")) {
+            // Get linear regression
+
+            // Get float[] of both attributes
+
+            // Get anomalies time step
+        }
+        List<XYChart.Series<Number, Number>> seriesList;
+
+        seriesList = getAnomalyGraphSeriesList();
+    }
+
+    private List<XYChart.Series<Number, Number>> getAnomalyGraphSeriesList() {
+        List<XYChart.Series<Number, Number>> seriesList = new ArrayList<XYChart.Series<Number, Number>>();
+        List<Integer> anomaliesTimeSteps = this.vm.getAnomliesTimeSteps();
+
+        return null;
+    }
+
+    private void updateSpecificGraph(LineChart<Number, Number> graph, String attr, float[] values,
+            boolean attributeChanged) {
         XYChart.Series<Number, Number> series;
 
         // In case we updateGraphs because the selectedAttribute changed, build the
         // series from the ground up
         if (attributeChanged) {
             series = new XYChart.Series<>();
-            float[] values = this.hashMap.valueAt(attr).getValue();
             if (values == null) {
                 graph.getData().clear();
                 graph.setTitle("None");
@@ -170,6 +202,7 @@ public class MainView implements Initializable {
             graph.setTitle(attr);
             graph.getData().add(series);
         }
+
         // Otherwise, we update because of timeStep update - add only the neccessary
         // data to the series - MUCH FASTER!
         else {
