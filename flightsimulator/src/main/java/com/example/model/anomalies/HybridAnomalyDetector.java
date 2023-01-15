@@ -17,6 +17,17 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	HashMap<String, Integer> correlated_map_circle = new HashMap<>();
 
 	@Override
+	public Line GetCorrelatedLine(String attr1, String attr2)
+	{
+		for (int i=0; i<correlated_map.size(); i++)
+		{
+			if(correlated_map.get(i).feature1 == attr1 && correlated_map.get(i).feature2 == attr2)
+				return correlated_map.get(i).lin_reg;
+		}
+		return null;
+	}
+
+	@Override
 	public void learnNormal(TimeSeries ts) {
 		HashMap<String, float[]> map = ts.map;
 		String[] features = ts.features;

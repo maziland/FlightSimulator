@@ -31,6 +31,13 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return slicedArray;
 	}
 
+
+	@Override
+	public Line GetCorrelatedLine(String attr1, String attr2)
+	{
+		return null;
+	}
+
 	@Override
 	public void learnNormal(TimeSeries ts) {
 		HashMap<String, float[]> map = ts.map;
