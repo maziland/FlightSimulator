@@ -209,6 +209,7 @@ public class MainView implements Initializable {
                 correlatedPointSeries.getData().add(new XYChart.Data<Number, Number>(i, correlatedProperties[i - 1]));
             }
 
+            // TODO: create linReg based on the learnNormal!!!
             // Get linear regression
             Point[] pointsArr = StatLib.createPointsArray(selectedProperties, correlatedProperties);
             Line linReg = StatLib.linear_reg(pointsArr);
@@ -220,7 +221,12 @@ public class MainView implements Initializable {
             // Get anomalies time step
             Circle redCircle = new Circle(3);
             redCircle.setFill(Color.RED);
+            // TODO: get only anomalies relevant for current Attributes!!
+
             List<Integer> anomaliesTimeSteps = this.vm.getAnomliesTimeSteps();
+
+            // TODO: move correlated Features to util
+            // List<CorrelatedFeatures> correlatedFeatures = this.vm.getAnomliesTimeSteps();
             for (Integer timeStep : anomaliesTimeSteps) {
                 XYChart.Data<Number, Number> point = selectedPointSeries.getData().get(timeStep);
                 point.setNode(redCircle);
