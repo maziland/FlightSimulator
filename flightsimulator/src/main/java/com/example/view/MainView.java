@@ -30,6 +30,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
@@ -82,6 +83,16 @@ public class MainView implements Initializable {
     private Label pitch;
     @FXML
     private Label yawn;
+
+    @FXML
+    private NumberAxis FGxAxis;
+    @FXML
+    private NumberAxis FGyAxis;
+    @FXML
+    private NumberAxis SGxAxis;
+    @FXML
+    private NumberAxis SGyAxis;
+    
 
     @FXML
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
@@ -224,6 +235,7 @@ public class MainView implements Initializable {
     private void updateSpecificGraph(LineChart<Number, Number> graph, String attr, float[] values,
             boolean attributeChanged) {
         XYChart.Series<Number, Number> series;
+        
 
         // In case we updateGraphs because the selectedAttribute changed, build the
         // series from the ground up
@@ -234,7 +246,9 @@ public class MainView implements Initializable {
                 graph.setTitle("None");
                 return;
             }
-            // TODO: set upper bound to the max current value
+
+            
+            
             for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
                 series.getData().add(new XYChart.Data<>(i, values[i - 1]));
             }
@@ -250,6 +264,42 @@ public class MainView implements Initializable {
             int index = this.currentTimeStepProperty.get();
             series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
         }
+        float max = values[1];
+        float min = values[1];
+        // TODO: set upper bound to the max current value
+        for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
+            if(max<values[i])
+            {
+                max = values[i];
+            }
+            if(min>values[i])
+            {
+                min = values[i];
+            }
+        }
+        
+        // Set attributes for first graph
+        FGxAxis.setAutoRanging(false);
+        FGxAxis.setUpperBound(this.currentTimeStepProperty.get());
+        //FGxAxis.setTickUnit(this.currentTimeStepProperty.get()/10);
+        FGxAxis.setAnimated(true);
+        FGyAxis.setAutoRanging(false);
+        FGyAxis.setLowerBound(min);
+        FGyAxis.setUpperBound(max);
+        FGyAxis.setTickUnit((max-min)/10);
+        FGyAxis.setAnimated(true);
+
+        // Set attributes for second graph
+        SGxAxis.setAutoRanging(false);
+        SGxAxis.setUpperBound(this.currentTimeStepProperty.get());
+        //SGxAxis.setTickUnit(this.currentTimeStepProperty.get()/10);
+        SGxAxis.setAnimated(true);
+        SGyAxis.setAutoRanging(false);
+        SGyAxis.setLowerBound(min);
+        SGyAxis.setUpperBound(max);
+        SGyAxis.setTickUnit((max-min)/10);
+        SGyAxis.setAnimated(true);
+            
     }
 
     private void set_startup_xml() {
