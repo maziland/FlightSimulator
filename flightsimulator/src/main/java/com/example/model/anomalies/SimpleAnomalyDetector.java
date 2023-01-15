@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 
-	List<CorrelatedFeatures> correlatedFeatures = new ArrayList<CorrelatedFeatures>();
+	public List<CorrelatedFeatures> correlatedFeatures = new ArrayList<CorrelatedFeatures>();
 	public static float threshold = 0.90f;
 
 	public static float getMaxOffset(Point[] points, Line lin_reg) {

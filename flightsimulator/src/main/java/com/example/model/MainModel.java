@@ -19,6 +19,7 @@ import com.example.model.anomalies.SimpleAnomalyDetector;
 import com.example.model.anomalies.TimeSeries;
 import com.example.model.anomalies.TimeSeriesAnomalyDetector;
 import com.example.model.anomalies.ZScoreAnomalyDetector;
+import com.example.util.CorrelatedFeatures;
 
 import javax.xml.parsers.*;
 
@@ -107,6 +108,7 @@ public class MainModel {
 
     public void detectAnomalies() {
         List<AnomalyReport> anomalies = this.currentAlg.alg.detect(this.timeSeries);
+        // List<CorrelatedFeatures> a = this.currentAlg.alg.;
         List<Integer> anomaliesTimeSteps = new ArrayList<>();
         for (AnomalyReport anom : anomalies) {
             anomaliesTimeSteps.add((int) anom.timeStep);
@@ -124,8 +126,8 @@ public class MainModel {
     }
 
     public String getCorrelatedFeature(String attr) {
-        if (this.timeSeries.correlatedFeatures.get(attr) != null)
-            return this.timeSeries.correlatedFeatures.get(attr).correlatedFeature;
+        if (this.normalFlight.correlatedFeatures.get(attr) != null)
+            return this.normalFlight.correlatedFeatures.get(attr).correlatedFeature;
         return null;
     }
 
