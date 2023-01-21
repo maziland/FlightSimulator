@@ -45,20 +45,20 @@
                   <!-- First Graph -->
                   <LineChart fx:id="selectedAttributeGraph" layoutX="14.0" layoutY="52.0" title="Selected Attribute" styleClass="pink-text">
                      <xAxis>
-                        <NumberAxis side="BOTTOM" />
+                        <NumberAxis side="BOTTOM" fx:id="FGxAxis"/>
                      </xAxis>
                      <yAxis>
-                       <NumberAxis side="LEFT" />
+                       <NumberAxis side="LEFT" fx:id="FGyAxis"/>
                      </yAxis>
                   </LineChart>
 
                   <!-- Second Graph -->
                   <LineChart fx:id="correlativeAttributeGraph" layoutX="14.0" layoutY="52.0" title="CorrelativeAttribute" styleClass="pink-text">
                      <xAxis>
-                        <NumberAxis side="BOTTOM" />
+                        <NumberAxis side="BOTTOM" fx:id="SGxAxis" />
                      </xAxis>
                      <yAxis>
-                        <NumberAxis side="LEFT" />
+                        <NumberAxis side="LEFT" fx:id="SGyAxis"/>
                      </yAxis>
                   </LineChart>
                </HBox>
