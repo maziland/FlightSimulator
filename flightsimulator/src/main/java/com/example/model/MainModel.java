@@ -19,7 +19,6 @@ import com.example.model.anomalies.SimpleAnomalyDetector;
 import com.example.model.anomalies.TimeSeries;
 import com.example.model.anomalies.TimeSeriesAnomalyDetector;
 import com.example.model.anomalies.ZScoreAnomalyDetector;
-import com.example.util.CorrelatedFeatures;
 import com.example.util.Line;
 
 import javax.xml.parsers.*;
