@@ -20,6 +20,7 @@ import com.example.model.anomalies.TimeSeries;
 import com.example.model.anomalies.TimeSeriesAnomalyDetector;
 import com.example.model.anomalies.ZScoreAnomalyDetector;
 import com.example.util.CorrelatedFeatures;
+import com.example.util.Line;
 
 import javax.xml.parsers.*;
 
@@ -35,7 +36,6 @@ public class MainModel {
         }
     }
 
-    // TODO: What for??????
     public static Object HashMap;
 
     public final String xml_config_path = "flightsimulator/src/main/config/config.xml";
@@ -47,7 +47,6 @@ public class MainModel {
     private CurrentAlgorithm currentAlg;
     private HashMap<String, TimeSeriesAnomalyDetector> algorithmsMap;
     private TimeSeries timeSeries, normalFlight;
-    public List<Integer> anomaliesTimeSteps;
     public FlightSimulatorConnector fsc;
 
     public MainModel() {
@@ -61,6 +60,10 @@ public class MainModel {
         Map.Entry<String, float[]> entry = this.timeSeries.map.entrySet().iterator().next();
         int length = entry.getValue().length;
         return length;
+    }
+
+    public Line getCorrelatedLinearRegression(String selected, String correlated) {
+        return this.currentAlg.alg.GetCorrelatedLine(selected, correlated);
     }
 
     private void createDefaultAnoamalyList() {
@@ -91,7 +94,7 @@ public class MainModel {
         TimeSeriesAnomalyDetector alg = this.algorithmsMap.get(name);
         this.currentAlg.name = name;
         this.currentAlg.alg = alg;
-        detectAnomalies();
+        // detectAnomalies();
     }
 
     public String getCurrentAlgorithm() {
@@ -106,19 +109,20 @@ public class MainModel {
         return this.xmlColumns;
     }
 
-    public void detectAnomalies() {
+    public List<Integer> detectAnomalies(String description) {
+        List<Integer> anomaliesTimeSteps = new ArrayList<>();
         List<AnomalyReport> anomalies = this.currentAlg.alg.detect(this.timeSeries);
         // List<CorrelatedFeatures> a = this.currentAlg.alg.;
-        List<Integer> anomaliesTimeSteps = new ArrayList<>();
         for (AnomalyReport anom : anomalies) {
-            anomaliesTimeSteps.add((int) anom.timeStep);
+            if (anom.description.equals(description))
+                anomaliesTimeSteps.add((int) anom.timeStep);
         }
-        this.anomaliesTimeSteps = anomaliesTimeSteps;
+        return anomaliesTimeSteps;
     }
 
     public void setTimeSeries(String path) {
         this.timeSeries = new TimeSeries(path);
-        detectAnomalies();
+        // detectAnomalies();
     }
 
     public HashMap<String, float[]> getTimeSeriesHashMap() {

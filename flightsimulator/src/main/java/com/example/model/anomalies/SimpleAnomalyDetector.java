@@ -9,14 +9,12 @@ import java.util.List;
 public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	public List<CorrelatedFeatures> correlatedFeatures = new ArrayList<CorrelatedFeatures>();
-	public static float threshold = 0.90f;
+	public static float threshold = 0.20f;
 
 	@Override
-	public Line GetCorrelatedLine(String attr1, String attr2)
-	{
-		for (int i=0; i<correlatedFeatures.size(); i++)
-		{
-			if(correlatedFeatures.get(i).feature1 == attr1 && correlatedFeatures.get(i).feature2 == attr2)
+	public Line GetCorrelatedLine(String attr1, String attr2) {
+		for (int i = 0; i < correlatedFeatures.size(); i++) {
+			if (correlatedFeatures.get(i).feature1.equals(attr1) && correlatedFeatures.get(i).feature2.equals(attr2))
 				return correlatedFeatures.get(i).lin_reg;
 		}
 		return null;
@@ -95,7 +93,7 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 			anomalyRows = getRowsWithHigherOffsets(testPoints, cf.lin_reg, cf.threshold);
 
 			for (int row : anomalyRows) {
-				AnomalyReport anom = new AnomalyReport(cf.feature1 + "-" + cf.feature2, row);
+				AnomalyReport anom = new AnomalyReport(cf.feature1 + ":" + cf.feature2, row);
 				anomalies.add(anom);
 			}
 		}

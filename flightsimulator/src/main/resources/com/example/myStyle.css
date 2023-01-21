@@ -29,3 +29,19 @@
 .list-view {
     -fx-background-color: #E8C4C4;
 }
+
+.default-color0.chart-series-line {
+    -fx-stroke: transparent;
+}
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: transparent, green;
+}
+
+.default-color1.chart-series-line {
+    -fx-stroke: yellow;
+}
+
+.default-color1.chart-line-symbol {
+    -fx-background-color: yellow, yellow;
+}

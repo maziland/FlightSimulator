@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.example.model.MainModel;
+import com.example.util.Line;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
@@ -58,8 +59,8 @@ public class MainViewModel {
         return this.m.getCorrelatedFeature(attr);
     }
 
-    public List<Integer> getAnomliesTimeSteps() {
-        return this.m.anomaliesTimeSteps;
+    public Line getCorrelatedLinearRegression(String selected, String correlated) {
+        return this.m.getCorrelatedLinearRegression(selected, correlated);
     }
 
     public void initAttributesListProperty() {
@@ -93,6 +94,10 @@ public class MainViewModel {
             return true;
         } else
             return false;
+    }
+
+    public List<Integer> detectAnomalies(String description) {
+        return this.m.detectAnomalies(description);
     }
 
     public void uploadAlgorithm(File file) throws Exception {

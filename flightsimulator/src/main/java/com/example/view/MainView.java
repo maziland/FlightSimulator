@@ -49,6 +49,7 @@ public class MainView implements Initializable {
     final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
     List<String> xmlColumnsNames;
     List<String> xmlNodes;
+    List<Integer> currentAnomaliesTimeSteps;
     StringProperty selectedAttribute, selectedAlgorithm;
     MapProperty<String, float[]> hashMap;
 
@@ -85,6 +86,8 @@ public class MainView implements Initializable {
 
     @FXML
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
+    private XYChart.Series<Number, Number> pointSeries;
+    private XYChart.Series<Number, Number> linRegSeries;
 
     @FXML
     private TextField speedInput;
@@ -146,9 +149,19 @@ public class MainView implements Initializable {
         this.correlativeAttributeGraph.setCreateSymbols(false);
         this.correlativeAttributeGraph.setAnimated(false);
 
-        this.anomaliesGraph.setCreateSymbols(false);
+        this.anomaliesGraph.setCreateSymbols(true);
+        this.anomaliesGraph.setAnimated(false);
+        pointSeries = new XYChart.Series<>();
+        linRegSeries = new XYChart.Series<>();
+        // linRegSeries.setCreateSymbols(false);
+        this.anomaliesGraph.getData().add(pointSeries);
+        this.anomaliesGraph.getData().add(linRegSeries);
         this.vm.updateHashMap();
     };
+
+    private Line getCorrelatedLinearRegression(String selected, String correlated) {
+        return this.vm.getCorrelatedLinearRegression(selected, correlated);
+    }
 
     private void updateAllGraphs(boolean attributeChanged) {
         String selectedAttr = this.selectedAttribute.getValue();
@@ -163,69 +176,90 @@ public class MainView implements Initializable {
                 this.hashMap.valueAt(selectedAttr).getValue(), attributeChanged);
 
         // Update anomalies graph
-        updateAnomaliesGraph(selectedAttr, correlatedAttr);
+        updateAnomaliesGraph(selectedAttr, correlatedAttr, attributeChanged);
     }
 
-    private void updateAnomaliesGraph(String selectedAttr, String correlatedAttr) {
+    private void updateAnomaliesGraph(String selectedAttr, String correlatedAttr, boolean attributeChanged) {
 
-        if (anomaliesGraph.getData().size() != 0)
-            return;
-        List<XYChart.Series<Number, Number>> seriesList;
-        seriesList = getAnomalyGraphSeriesList(selectedAttr, correlatedAttr);
-        for (XYChart.Series<Number, Number> series : seriesList) {
-            this.anomaliesGraph.getData().add(series);
-        }
+        if (attributeChanged)
+            this.currentAnomaliesTimeSteps = this.vm.detectAnomalies(selectedAttr + ":" + correlatedAttr);
+        setAnomalyGraphSeriesList(selectedAttr, correlatedAttr, attributeChanged);
     }
 
-    private List<XYChart.Series<Number, Number>> getAnomalyGraphSeriesList(String selectedAttr, String correlatedAttr) {
+    private void setAnomalyGraphSeriesList(String selectedAttr, String correlatedAttr,
+            boolean attributeChanged) {
 
-        List<XYChart.Series<Number, Number>> seriesList = new ArrayList<XYChart.Series<Number, Number>>();
-        XYChart.Series<Number, Number> selectedPointSeries, correlatedPointSeries, linRegSeries;
-        selectedPointSeries = new XYChart.Series<>();
-        correlatedPointSeries = new XYChart.Series<>();
-        linRegSeries = new XYChart.Series<>();
+        Circle redCircle = new Circle(3);
+        redCircle.setFill(Color.RED);
+
+        Integer index = this.currentTimeStepProperty.getValue();
 
         if (this.selectedAlgorithm.getValue().equals("SimpleAnomalyDetector")) {
 
-            // Get float[] of both attributes
-            float[] selectedProperties = this.hashMap.get(selectedAttr);
-            for (int i = 1; i < selectedProperties.length; i++) {
-                selectedPointSeries.getData().add(new XYChart.Data<Number, Number>(i, selectedProperties[i - 1]));
-            }
-
-            float[] correlatedProperties = this.hashMap.get(correlatedAttr);
-            for (int i = 1; i < correlatedProperties.length; i++) {
-                correlatedPointSeries.getData().add(new XYChart.Data<Number, Number>(i, correlatedProperties[i - 1]));
-            }
-
-            // TODO: create linReg based on the learnNormal!!!
             // Get linear regression
-            Point[] pointsArr = StatLib.createPointsArray(selectedProperties, correlatedProperties);
-            Line linReg = StatLib.linear_reg(pointsArr);
+            Point[] pointsArr = StatLib.createPointsArray(this.hashMap.get(selectedAttr),
+                    this.hashMap.get(correlatedAttr));
 
-            for (int i = 1; i < pointsArr.length; i++) {
-                linRegSeries.getData().add(new XYChart.Data<Number, Number>(i, (linReg.a * i) + linReg.b));
+            Line linReg = getCorrelatedLinearRegression(selectedAttr, correlatedAttr);
+
+            // Points
+            if (attributeChanged == false) {
+                if (index == this.vm.getfilesize())
+                    return;
+                XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(pointsArr[index].x,
+                        pointsArr[index].y);
+                if (this.currentAnomaliesTimeSteps.contains(index))
+                    point.setNode(redCircle);
+                this.pointSeries.getData().add(point);
+
+            }
+
+            else {
+                pointSeries.getData().clear();
+                for (int i = 0; i < index; i++) {
+                    XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(pointsArr[i].x,
+                            pointsArr[i].y);
+                    if (this.currentAnomaliesTimeSteps.contains(index)) {
+                        point.setNode(redCircle);
+                    }
+                    this.pointSeries.getData().add(point);
+                }
+            }
+
+            // Linear reg
+            if (attributeChanged == false) {
+                float a = this.hashMap.get(this.selectedAttribute.get())[this.currentTimeStepProperty.get()];
+                linRegSeries.getData().add(new XYChart.Data<Number, Number>(a, a * linReg.a + linReg.b));
+            } else {
+                linRegSeries.getData().clear();
+                for (int i = 1; i < index; i++) {
+                    linRegSeries.getData().add(new XYChart.Data<Number, Number>(i, (linReg.a * i) + linReg.b));
+                }
             }
 
             // Get anomalies time step
-            Circle redCircle = new Circle(3);
-            redCircle.setFill(Color.RED);
+
             // TODO: get only anomalies relevant for current Attributes!!
 
-            List<Integer> anomaliesTimeSteps = this.vm.getAnomliesTimeSteps();
-
-            // TODO: move correlated Features to util
-            // List<CorrelatedFeatures> correlatedFeatures = this.vm.getAnomliesTimeSteps();
-            for (Integer timeStep : anomaliesTimeSteps) {
-                XYChart.Data<Number, Number> point = selectedPointSeries.getData().get(timeStep);
-                point.setNode(redCircle);
-            }
         }
-        seriesList.add(selectedPointSeries);
-        seriesList.add(correlatedPointSeries);
-        seriesList.add(linRegSeries);
-        return seriesList;
+
     }
+    // XYChart.Series<Number, Number> mazi = new XYChart.Series<>();
+    // mazi.getData().add(new XYChart.Data<Number, Number>(5, 10));
+    // mazi.getData().add(new XYChart.Data<Number, Number>(3, 2));
+    // XYChart.Series<Number, Number> mazi2 = new XYChart.Series<>();
+    // mazi2.getData().add(new XYChart.Data<Number, Number>(1, 10));
+    // mazi2.getData().add(new XYChart.Data<Number, Number>(4, 5));
+    // XYChart.Series<Number, Number> mazi3 = new XYChart.Series<>();
+    // mazi3.getData().add(new XYChart.Data<Number, Number>(1, 4));
+    // mazi3.getData().add(new XYChart.Data<Number, Number>(2, 6));
+    // Circle green = new Circle(10);
+    // green.setFill(Color.GREEN);
+    // seriesList.add(mazi);
+    // seriesList.add(mazi2);
+    // seriesList.add(mazi3);
+    // XYChart.Data<Number, Number> point = mazi.getData().get(0);
+    // point.setNode(green);
 
     private void updateSpecificGraph(LineChart<Number, Number> graph, String attr, float[] values,
             boolean attributeChanged) {
