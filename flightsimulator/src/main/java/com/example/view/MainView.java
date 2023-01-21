@@ -93,7 +93,6 @@ public class MainView implements Initializable {
     private NumberAxis SGxAxis;
     @FXML
     private NumberAxis SGyAxis;
-    
 
     @FXML
     private LineChart<Number, Number> selectedAttributeGraph, correlativeAttributeGraph, anomaliesGraph;
@@ -162,11 +161,11 @@ public class MainView implements Initializable {
 
         this.anomaliesGraph.setCreateSymbols(true);
         this.anomaliesGraph.setAnimated(false);
-        pointSeries = new XYChart.Series<>();
         linRegSeries = new XYChart.Series<>();
+        pointSeries = new XYChart.Series<>();
         // linRegSeries.setCreateSymbols(false);
-        this.anomaliesGraph.getData().add(pointSeries);
         this.anomaliesGraph.getData().add(linRegSeries);
+        this.anomaliesGraph.getData().add(pointSeries);
         this.vm.updateHashMap();
     };
 
@@ -248,34 +247,13 @@ public class MainView implements Initializable {
                 }
             }
 
-            // Get anomalies time step
-
-            // TODO: get only anomalies relevant for current Attributes!!
-
         }
 
     }
-    // XYChart.Series<Number, Number> mazi = new XYChart.Series<>();
-    // mazi.getData().add(new XYChart.Data<Number, Number>(5, 10));
-    // mazi.getData().add(new XYChart.Data<Number, Number>(3, 2));
-    // XYChart.Series<Number, Number> mazi2 = new XYChart.Series<>();
-    // mazi2.getData().add(new XYChart.Data<Number, Number>(1, 10));
-    // mazi2.getData().add(new XYChart.Data<Number, Number>(4, 5));
-    // XYChart.Series<Number, Number> mazi3 = new XYChart.Series<>();
-    // mazi3.getData().add(new XYChart.Data<Number, Number>(1, 4));
-    // mazi3.getData().add(new XYChart.Data<Number, Number>(2, 6));
-    // Circle green = new Circle(10);
-    // green.setFill(Color.GREEN);
-    // seriesList.add(mazi);
-    // seriesList.add(mazi2);
-    // seriesList.add(mazi3);
-    // XYChart.Data<Number, Number> point = mazi.getData().get(0);
-    // point.setNode(green);
 
     private void updateSpecificGraph(LineChart<Number, Number> graph, String attr, float[] values,
             boolean attributeChanged) {
         XYChart.Series<Number, Number> series;
-        
 
         // In case we updateGraphs because the selectedAttribute changed, build the
         // series from the ground up
@@ -287,8 +265,6 @@ public class MainView implements Initializable {
                 return;
             }
 
-            
-            
             for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
                 series.getData().add(new XYChart.Data<>(i, values[i - 1]));
             }
@@ -306,40 +282,37 @@ public class MainView implements Initializable {
         }
         float max = values[1];
         float min = values[1];
-        // TODO: set upper bound to the max current value
         for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
-            if(max<values[i])
-            {
+            if (max < values[i]) {
                 max = values[i];
             }
-            if(min>values[i])
-            {
+            if (min > values[i]) {
                 min = values[i];
             }
         }
-        
+
         // Set attributes for first graph
         FGxAxis.setAutoRanging(false);
         FGxAxis.setUpperBound(this.currentTimeStepProperty.get());
-        //FGxAxis.setTickUnit(this.currentTimeStepProperty.get()/10);
+        // FGxAxis.setTickUnit(this.currentTimeStepProperty.get()/10);
         FGxAxis.setAnimated(true);
         FGyAxis.setAutoRanging(false);
         FGyAxis.setLowerBound(min);
         FGyAxis.setUpperBound(max);
-        FGyAxis.setTickUnit((max-min)/10);
+        FGyAxis.setTickUnit((max - min) / 10);
         FGyAxis.setAnimated(true);
 
         // Set attributes for second graph
         SGxAxis.setAutoRanging(false);
         SGxAxis.setUpperBound(this.currentTimeStepProperty.get());
-        //SGxAxis.setTickUnit(this.currentTimeStepProperty.get()/10);
+        // SGxAxis.setTickUnit(this.currentTimeStepProperty.get()/10);
         SGxAxis.setAnimated(true);
         SGyAxis.setAutoRanging(false);
         SGyAxis.setLowerBound(min);
         SGyAxis.setUpperBound(max);
-        SGyAxis.setTickUnit((max-min)/10);
+        SGyAxis.setTickUnit((max - min) / 10);
         SGyAxis.setAnimated(true);
-            
+
     }
 
     private void set_startup_xml() {
