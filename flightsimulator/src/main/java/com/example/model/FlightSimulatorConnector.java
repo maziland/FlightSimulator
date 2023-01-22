@@ -87,13 +87,11 @@ public class FlightSimulatorConnector {
                 while (simulator_data.size() > control.currentTimeStep.get()) {
                     if (control.state == forward) {
                         control.state = "";
-                        control.currentTimeStep.set(control.currentTimeStep.get() + 1);
                     } else if (control.state == pause) {
                         while (control.state == pause) {
 
                         }
                     } else if (control.state == backward) {
-                        control.currentTimeStep.set(control.currentTimeStep.get() - 1);
                         control.state = "";
                     } else if (control.state == stop) {
                         out.close();

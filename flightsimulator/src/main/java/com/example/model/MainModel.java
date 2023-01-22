@@ -252,11 +252,11 @@ public class MainModel {
     }
 
     public void forwardSimulator() {
-        fsc.control.state = fsc.forward;
+        //fsc.control.delay = fsc.control.delay += 1;
     }
 
     public void backwardSimulator() {
-        fsc.control.state = fsc.backward;
+        //fsc.control.delay = fsc.control.delay -= 1;
     }
 
     public void tostartSimulator() {

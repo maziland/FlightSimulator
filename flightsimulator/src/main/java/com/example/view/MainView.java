@@ -136,7 +136,6 @@ public class MainView implements Initializable {
         this.hashMap.bind(this.vm.hashMap);
         this.TimeSlider.setMax(this.vm.getfilesize()); // change this
         this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue.intValue());
             vm.timeSliderHandler(newValue.intValue());
         });
         this.speedInput.textProperty().addListener((obs, oldValue, newValue) -> {
@@ -406,6 +405,23 @@ public class MainView implements Initializable {
     @FXML
     public void controlButtonHandler(ActionEvent e) {
         String id = ((Button) e.getSource()).getId();
+        if(id.equals("ForwardButton"))
+        {
+            int new_value = Integer.parseInt(this.speedInput.getText()) + 1;
+            this.speedInput.setText(Integer.toString(new_value));
+            vm.setSpeedTime(new_value);
+        }
+        else if (id.equals("BackwardButton"))
+        {          
+            int new_value = Integer.parseInt(this.speedInput.getText()) - 1;
+
+            // Verify that the user is not try to set the value to 0
+            if (new_value != 0)
+            {
+                this.speedInput.setText(Integer.toString(new_value));
+                vm.setSpeedTime(new_value);
+            }
+        }
         this.vm.mediaCommand(id);
     }
 
