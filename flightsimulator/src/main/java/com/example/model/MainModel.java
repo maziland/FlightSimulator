@@ -237,7 +237,10 @@ public class MainModel {
          * The function connects to the simulator and sends the flight data with the
          * given delay
          */
+
+        System.out.println("Status is: " + fsc.control.state);
         if (fsc.control.state == "") {
+            fsc.control.index = 0;
             fsc.executeFlight();
         }
         fsc.control.state = fsc.run;

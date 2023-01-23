@@ -45,6 +45,7 @@ public class FlightSimulatorConnector {
             try {
                 fg = new Socket(simulator_ip, simulator_port);
             } catch (Exception e) {
+                control.state = "";
                 return;
             }
 
@@ -57,8 +58,10 @@ public class FlightSimulatorConnector {
                     fg.close();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    control.state = "";
                 }
                 e1.printStackTrace();
+                control.state = "";
                 return;
             }
             try {
@@ -69,8 +72,10 @@ public class FlightSimulatorConnector {
                     in.close();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    control.state = "";
                 }
                 e1.printStackTrace();
+                control.state = "";
                 return;
             }
 
