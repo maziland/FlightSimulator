@@ -111,7 +111,7 @@ public class FlightSimulatorConnector {
                     out.println(simulator_data.get(control.currentTimeStep.get()));
                     out.flush();
                     control.currentTimeStep.set(control.currentTimeStep.get() + 1);
-                    Thread.sleep(control.delay * 20);
+                    Thread.sleep(20 / control.delay);
                 }
                 out.close();
                 in.close();
