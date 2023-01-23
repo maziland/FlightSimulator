@@ -130,14 +130,23 @@ public class MainView implements Initializable {
         this.algorithmsDropdown.getSelectionModel().selectFirst();
         this.vm.selectedAttribute.bind(this.selectedAttribute);
         this.vm.selectedAlgorithm.bind(this.selectedAlgorithm);
+
         this.set_startup_xml();
         this.set_startup_csv();
         this.init_graphs();
         this.hashMap.bind(this.vm.hashMap);
         this.TimeSlider.setMax(this.vm.getfilesize()); // change this
+
+        this.TimeSlider.valueProperty().bind(this.currentTimeStepProperty);
+
+        this.TimeSlider.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> this.TimeSlider.valueProperty().unbind());
+        this.TimeSlider.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> this.TimeSlider.valueProperty().bind(this.currentTimeStepProperty));
+
         this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             vm.timeSliderHandler(newValue.intValue());
+            this.TimeSlider.valueProperty().bind(this.currentTimeStepProperty);
         });
+        
         this.speedInput.textProperty().addListener((obs, oldValue, newValue) -> {
 
             try {
