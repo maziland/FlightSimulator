@@ -284,8 +284,14 @@ public class MainView implements Initializable {
         else if (graph.getData().size() != 0) {
             series = graph.getData().get(0);
             int index = this.currentTimeStepProperty.get();
-            series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
+            try{
+                series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
+            }
+            catch(Exception e)
+            {
+            }
         }
+
         float max = values[1];
         float min = values[1];
         for (int i = 1; i < this.currentTimeStepProperty.get(); i++) {
@@ -318,6 +324,7 @@ public class MainView implements Initializable {
         SGyAxis.setUpperBound(max);
         SGyAxis.setTickUnit((max - min) / 10);
         SGyAxis.setAnimated(true);
+  
 
     }
 
