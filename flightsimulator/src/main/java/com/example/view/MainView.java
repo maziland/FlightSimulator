@@ -140,13 +140,14 @@ public class MainView implements Initializable {
         this.TimeSlider.valueProperty().bind(this.currentTimeStepProperty);
 
         this.TimeSlider.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> this.TimeSlider.valueProperty().unbind());
-        this.TimeSlider.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> this.TimeSlider.valueProperty().bind(this.currentTimeStepProperty));
+        this.TimeSlider.addEventFilter(MouseEvent.MOUSE_RELEASED,
+                e -> this.TimeSlider.valueProperty().bind(this.currentTimeStepProperty));
 
         this.TimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             vm.timeSliderHandler(newValue.intValue());
             this.TimeSlider.valueProperty().bind(this.currentTimeStepProperty);
         });
-        
+
         this.speedInput.textProperty().addListener((obs, oldValue, newValue) -> {
 
             try {
@@ -177,6 +178,12 @@ public class MainView implements Initializable {
 
     private Line getCorrelatedLinearRegression(String selected, String correlated) {
         return this.vm.getCorrelatedLinearRegression(selected, correlated);
+    }
+
+    private void clearAllGraphs() {
+        this.selectedAttributeGraph.getData().clear();
+        this.anomaliesGraph.getData().clear();
+        this.correlativeAttributeGraph.getData().clear();
     }
 
     private void updateAllGraphs(boolean attributeChanged) {
@@ -284,11 +291,9 @@ public class MainView implements Initializable {
         else if (graph.getData().size() != 0) {
             series = graph.getData().get(0);
             int index = this.currentTimeStepProperty.get();
-            try{
+            try {
                 series.getData().add(new XYChart.Data<>(index, this.hashMap.valueAt(attr).getValue()[index - 1]));
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
             }
         }
 
@@ -324,7 +329,6 @@ public class MainView implements Initializable {
         SGyAxis.setUpperBound(max);
         SGyAxis.setTickUnit((max - min) / 10);
         SGyAxis.setAnimated(true);
-  
 
     }
 
@@ -421,22 +425,20 @@ public class MainView implements Initializable {
     @FXML
     public void controlButtonHandler(ActionEvent e) {
         String id = ((Button) e.getSource()).getId();
-        if(id.equals("ForwardButton"))
-        {
+        if (id.equals("ForwardButton")) {
             int new_value = Integer.parseInt(this.speedInput.getText()) + 1;
             this.speedInput.setText(Integer.toString(new_value));
             vm.setSpeedTime(new_value);
-        }
-        else if (id.equals("BackwardButton"))
-        {          
+        } else if (id.equals("BackwardButton")) {
             int new_value = Integer.parseInt(this.speedInput.getText()) - 1;
 
             // Verify that the user is not try to set the value to 0
-            if (new_value != 0)
-            {
+            if (new_value != 0) {
                 this.speedInput.setText(Integer.toString(new_value));
                 vm.setSpeedTime(new_value);
             }
+        } else if (id.equals("stopButton")) {
+            clearAllGraphs();
         }
         this.vm.mediaCommand(id);
     }

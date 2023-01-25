@@ -255,11 +255,11 @@ public class MainModel {
     }
 
     public void forwardSimulator() {
-        //fsc.control.delay = fsc.control.delay += 1;
+        // fsc.control.delay = fsc.control.delay += 1;
     }
 
     public void backwardSimulator() {
-        //fsc.control.delay = fsc.control.delay -= 1;
+        // fsc.control.delay = fsc.control.delay -= 1;
     }
 
     public void tostartSimulator() {

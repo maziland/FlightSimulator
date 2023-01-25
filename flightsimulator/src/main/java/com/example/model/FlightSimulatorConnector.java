@@ -103,9 +103,10 @@ public class FlightSimulatorConnector {
                         in.close();
                         fg.close();
                         control.state = "";
+                        control.currentTimeStep.set(1);
                         return;
                     } else if (control.state == tostart) {
-                        control.currentTimeStep.set(0);
+                        control.currentTimeStep.set(1);
                         control.state = "";
                         continue;
                     } else if (control.state == toend) {
