@@ -260,6 +260,41 @@ public class MainView implements Initializable {
                 }
             }
 
+        } else if (this.selectedAlgorithm.getValue().equals("ZScoreAnomalyDetector")) {
+            List<Float> zscoreList = this.vm.getZscoresForFeature(selectedAttr);
+            if (zscoreList == null) {
+                System.out.println("Got null");
+            }
+
+            // Points
+            if (attributeChanged == false) {
+                if (index == this.vm.getfilesize())
+                    return;
+                Float y = zscoreList.get(index);
+                XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(index,
+                        y);
+                // TODO: add anomalies for zScore alg
+                if (this.currentAnomaliesTimeSteps.contains(index))
+                    point.setNode(redCircle);
+                System.out.println("NOT CHANGED!!! Adding point: (" + index + "," + y + ")");
+                if (!(Float.isInfinite(y) && Float.isNaN(y)))
+                    this.pointSeries.getData().add(point);
+
+            }
+
+            else {
+                this.clearAllGraphs();
+                pointSeries.getData().clear();
+                for (int i = 0; i < index; i++) {
+                    XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(index,
+                            zscoreList.get(index));
+                    if (this.currentAnomaliesTimeSteps.contains(index)) {
+                        point.setNode(redCircle);
+                    }
+                    System.out.println("CHANGED!!! Adding point: (" + index + "," + zscoreList.get(index) + ")");
+                    this.pointSeries.getData().add(point);
+                }
+            }
         }
 
     }

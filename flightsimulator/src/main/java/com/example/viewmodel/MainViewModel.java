@@ -45,6 +45,10 @@ public class MainViewModel {
         return this.m.getfilesize();
     }
 
+    public List<Float> getZscoresForFeature(String feature) {
+        return this.m.getZscoresForFeature(feature);
+    }
+
     public void updateHashMap() {
         if (this.hashMap == null)
             this.hashMap = new SimpleMapProperty<>(FXCollections.observableHashMap());
@@ -73,7 +77,10 @@ public class MainViewModel {
         ObservableList<String> algorithmsList = FXCollections.observableArrayList(this.m.getAlgorithms());
         algorithmsList.add("Upload Algorithm...");
         this.algorithmsListProperty.set(algorithmsList);
-        this.selectedAlgorithm.addListener((o, ov, nv) -> System.out.println("Selected Algorithm Changed"));
+        this.selectedAlgorithm.addListener((o, ov, nv) -> {
+            this.m.setCurrentAlgorithm(nv);
+            System.out.println("Selected Algorithm Changed");
+        });
     }
 
     public boolean validateXML(File file) {

@@ -93,7 +93,10 @@ public class MainModel {
         TimeSeriesAnomalyDetector alg = this.algorithmsMap.get(name);
         this.currentAlg.name = name;
         this.currentAlg.alg = alg;
-        // detectAnomalies();
+        if (this.timeSeries == null)
+            return;
+        else
+            this.currentAlg.alg.detect(this.timeSeries);
     }
 
     public String getCurrentAlgorithm() {
@@ -121,7 +124,7 @@ public class MainModel {
 
     public void setTimeSeries(String path) {
         this.timeSeries = new TimeSeries(path);
-        // detectAnomalies();
+        this.currentAlg.alg.detect(this.timeSeries);
     }
 
     public HashMap<String, float[]> getTimeSeriesHashMap() {
@@ -230,6 +233,11 @@ public class MainModel {
         } else {
             return false;
         }
+    }
+
+    public List<Float> getZscoresForFeature(String feature) {
+        ZScoreAnomalyDetector myAlg = (ZScoreAnomalyDetector) this.currentAlg.alg;
+        return myAlg.getZscoresForFeature(feature);
     }
 
     public void runSimulator() throws IOException {
