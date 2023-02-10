@@ -55,6 +55,7 @@ public class FlightSimulatorConnector {
                 in = new BufferedReader(new FileReader(csv_config_path));
             } catch (FileNotFoundException e1) {
                 try {
+                    control.state = "";
                     fg.close();
                 } catch (Exception e) {
                     e.printStackTrace();

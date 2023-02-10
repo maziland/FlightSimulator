@@ -11,8 +11,6 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 	HashMap<String, Float> threshold_map = new HashMap<>();
 	HashMap<String, List<Float>> feature_zscore_map = new HashMap<>();
 
-	public static float threshold = 0.90f;
-
 	public List<Float> getZscoresForFeature(String feature) {
 		return this.feature_zscore_map.get(feature);
 	}
@@ -28,7 +26,6 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 		// Get the slice of the Array
 		float[] slicedArray = new float[endIndex - startIndex];
 		// copying array elements from the original array to the newly created sliced
-		// array
 		for (int i = 0; i < slicedArray.length; i++) {
 			slicedArray[i] = array[startIndex + i];
 		}
@@ -64,6 +61,10 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 				// Calculate Zscore
 				float feature_zscore = GetAbsValue(current_value - feature_avg) / feature_standard_dev;
+				if (!Float.isFinite(feature_zscore))
+				{
+					continue;
+				}
 
 				// Saves the maximum Zscore to variable
 				if (feature_zscore > max_zscore)
@@ -91,6 +92,11 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 				// Saves the current value to variable
 				float current_value = map.get(feature)[j];
+
+				if (feature_var == 0)
+				{
+					continue;
+				}
 
 				// Calculate Zscore
 				float feature_zscore = GetAbsValue(current_value - feature_avg) / feature_var;
