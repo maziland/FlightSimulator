@@ -61,8 +61,7 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 				// Calculate Zscore
 				float feature_zscore = GetAbsValue(current_value - feature_avg) / feature_standard_dev;
-				if (!Float.isFinite(feature_zscore))
-				{
+				if (!Float.isFinite(feature_zscore)) {
 					continue;
 				}
 
@@ -93,8 +92,7 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 				// Saves the current value to variable
 				float current_value = map.get(feature)[j];
 
-				if (feature_var == 0)
-				{
+				if (feature_var == 0) {
 					continue;
 				}
 
@@ -106,6 +104,8 @@ public class ZScoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 				if (feature_zscore > threshold_map.get(feature)) {
 					AnomalyReport anom = new AnomalyReport(feature, j);
 					anomalies.add(anom);
+					// System.out.println(String.format("Found anomaly in [%s], time: %d", feature,
+					// j));
 				}
 			}
 			this.feature_zscore_map.put(features[i], zscore_list);

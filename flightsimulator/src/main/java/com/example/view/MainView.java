@@ -123,17 +123,16 @@ public class MainView implements Initializable {
         this.selectedAlgorithm = new SimpleStringProperty();
         this.hashMap = new SimpleMapProperty<>();
         this.attributeList.itemsProperty().bind(this.vm.attributesListProperty);
-        this.algorithmsDropdown.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> {
-            this.selectedAlgorithm.set(nv);
-        });
         this.algorithmsDropdown.itemsProperty().bind(this.vm.algorithmsListProperty);
         this.algorithmsDropdown.getSelectionModel().selectFirst();
         this.vm.selectedAttribute.bind(this.selectedAttribute);
         this.vm.selectedAlgorithm.bind(this.selectedAlgorithm);
 
+        this.selectedAlgorithm.set("SimpleAnomalyDetector");
         this.set_startup_xml();
         this.set_startup_csv();
         this.init_graphs();
+        this.initAlgorithmsDropdown();
         this.hashMap.bind(this.vm.hashMap);
         this.TimeSlider.setMax(this.vm.getfilesize()); // change this
 
@@ -204,9 +203,17 @@ public class MainView implements Initializable {
 
     private void updateAnomaliesGraph(String selectedAttr, String correlatedAttr, boolean attributeChanged) {
 
-        if (attributeChanged)
-            this.currentAnomaliesTimeSteps = this.vm.detectAnomalies(selectedAttr + ":" + correlatedAttr);
-        setAnomalyGraphSeriesList(selectedAttr, correlatedAttr, attributeChanged);
+        if (selectedAttr != null) {
+            if (attributeChanged) {
+                if (this.selectedAlgorithm.getValue().equals("SimpleAnomalyDetector"))
+                    this.currentAnomaliesTimeSteps = this.vm.detectAnomalies(selectedAttr + ":" + correlatedAttr);
+                else if (this.selectedAlgorithm.getValue().equals("ZScoreAnomalyDetector"))
+                    this.currentAnomaliesTimeSteps = this.vm.detectAnomalies(selectedAttr);
+
+            }
+            setAnomalyGraphSeriesList(selectedAttr, correlatedAttr, attributeChanged);
+        }
+
     }
 
     private void setAnomalyGraphSeriesList(String selectedAttr, String correlatedAttr,
@@ -243,6 +250,7 @@ public class MainView implements Initializable {
                     XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(pointsArr[i].x,
                             pointsArr[i].y);
                     if (this.currentAnomaliesTimeSteps.contains(index)) {
+                        System.out.println(String.format("Found anomaly! time: %d:", index));
                         point.setNode(redCircle);
                     }
                     this.pointSeries.getData().add(point);
@@ -274,9 +282,11 @@ public class MainView implements Initializable {
                 XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(index,
                         y);
                 // TODO: add anomalies for zScore alg
-                if (this.currentAnomaliesTimeSteps.contains(index))
+                if (this.currentAnomaliesTimeSteps.contains(index)) {
+                    System.out.println(String.format("Found anomaly! time: %d:", index));
                     point.setNode(redCircle);
-                System.out.println("NOT CHANGED!!! Adding point: (" + index + "," + y + ")");
+                }
+                // System.out.println("NOT CHANGED!!! Adding point: (" + index + "," + y + ")");
                 if (!(Float.isInfinite(y) && Float.isNaN(y)))
                     this.pointSeries.getData().add(point);
 
@@ -478,22 +488,41 @@ public class MainView implements Initializable {
         this.vm.mediaCommand(id);
     }
 
+    private void initAlgorithmsDropdown() {
+        this.algorithmsDropdown.getSelectionModel().selectedItemProperty()
+                .addListener((o, ov, selected) -> {
+                    if (selected.equals("Upload Algorithm...")) {
+                        try {
+                            this.uploadAlgorithm();
+                        } catch (Exception e) {
+                            System.err.println("Failed uploading the algorithm");
+                            System.err.println(e.toString());
+                        }
+                    } else {
+                        this.selectedAlgorithm.set(selected);
+                        this.updateAllGraphs(true);
+                    }
+                });
+    }
+
     @FXML
     public void listMouseClick(MouseEvent mevent) {
         String id = ((Control) mevent.getSource()).getId();
+        System.out.println("got mouse");
         switch (id) {
             case ("algorithmsDropdown"):
-                String selected = algorithmsDropdown.getSelectionModel().getSelectedItem();
-                if (selected.equals("Upload Algorithm...")) {
-                    try {
-                        this.uploadAlgorithm();
-                    } catch (Exception e) {
-                        System.err.println("Failed uploading the algorithm");
-                        System.err.println(e.toString());
-                    }
-                } else {
-                    this.selectedAlgorithm.set(selected);
-                }
+                // String selected = algorithmsDropdown.getSelectionModel().getSelectedItem();
+                // if (selected.equals("Upload Algorithm...")) {
+                // try {
+                // this.uploadAlgorithm();
+                // } catch (Exception e) {
+                // System.err.println("Failed uploading the algorithm");
+                // System.err.println(e.toString());
+                // }
+                // } else {
+                // this.selectedAlgorithm.set(selected);
+                // this.updateAllGraphs(true);
+                // }
                 break;
             case ("attributeList"):
                 this.selectedAttribute.set(attributeList.getSelectionModel().getSelectedItem());
