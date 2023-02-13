@@ -114,7 +114,6 @@ public class MainModel {
     public List<Integer> detectAnomalies(String description) {
         List<Integer> anomaliesTimeSteps = new ArrayList<>();
         List<AnomalyReport> anomalies = this.currentAlg.alg.detect(this.timeSeries);
-        // List<CorrelatedFeatures> a = this.currentAlg.alg.;
         for (AnomalyReport anom : anomalies) {
             if (anom.description.equals(description))
                 anomaliesTimeSteps.add((int) anom.timeStep);

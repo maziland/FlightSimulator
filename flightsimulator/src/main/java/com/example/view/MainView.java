@@ -203,7 +203,9 @@ public class MainView implements Initializable {
 
     private void updateAnomaliesGraph(String selectedAttr, String correlatedAttr, boolean attributeChanged) {
 
+        // Verify that there is a selected attritbute from the list
         if (selectedAttr != null) {
+            // If the selected attribute has changed, run detect all over again
             if (attributeChanged) {
                 if (this.selectedAlgorithm.getValue().equals("SimpleAnomalyDetector"))
                     this.currentAnomaliesTimeSteps = this.vm.detectAnomalies(selectedAttr + ":" + correlatedAttr);
