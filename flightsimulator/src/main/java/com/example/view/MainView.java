@@ -251,7 +251,7 @@ public class MainView implements Initializable {
                 for (int i = 0; i < index; i++) {
                     XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(pointsArr[i].x,
                             pointsArr[i].y);
-                    if (this.currentAnomaliesTimeSteps.contains(index)) {
+                    if (this.currentAnomaliesTimeSteps.contains(i)) {
                         System.out.println(String.format("Found anomaly! time: %d:", index));
                         point.setNode(redCircle);
                     }
@@ -272,9 +272,6 @@ public class MainView implements Initializable {
 
         } else if (this.selectedAlgorithm.getValue().equals("ZScoreAnomalyDetector")) {
             List<Float> zscoreList = this.vm.getZscoresForFeature(selectedAttr);
-            if (zscoreList == null) {
-                System.out.println("Got null");
-            }
 
             // Points
             if (attributeChanged == false) {
@@ -285,7 +282,7 @@ public class MainView implements Initializable {
                         y);
                 // TODO: add anomalies for zScore alg
                 if (this.currentAnomaliesTimeSteps.contains(index)) {
-                    System.out.println(String.format("Found anomaly! time: %d:", index));
+                    // System.out.println(String.format("Found anomaly! time: %d:", index));
                     point.setNode(redCircle);
                 }
                 // System.out.println("NOT CHANGED!!! Adding point: (" + index + "," + y + ")");
@@ -295,16 +292,29 @@ public class MainView implements Initializable {
             }
 
             else {
-                this.clearAllGraphs();
+                // this.clearAllGraphs();
                 pointSeries.getData().clear();
+                // this.anomaliesGraph.getData().clear();
+                this.anomaliesGraph.getData().add(pointSeries);
                 for (int i = 0; i < index; i++) {
-                    XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(index,
-                            zscoreList.get(index));
-                    if (this.currentAnomaliesTimeSteps.contains(index)) {
+                    Float y = zscoreList.get(i);
+                    XYChart.Data<Number, Number> point = new XYChart.Data<Number, Number>(i,
+                            y);
+                    if (this.currentAnomaliesTimeSteps.contains(i)) {
                         point.setNode(redCircle);
                     }
-                    System.out.println("CHANGED!!! Adding point: (" + index + "," + zscoreList.get(index) + ")");
-                    this.pointSeries.getData().add(point);
+                    // System.out.println("CHANGED!!! Adding point: (" + i + "," + zscoreList.get(i)
+                    // + ")");
+
+                    if (!(Float.isInfinite(y) && Float.isNaN(y))) {
+                        try {
+                            if (this.anomaliesGraph.getData().contains(pointSeries))
+                                System.out.println("asdasdasdasdasdasdasdasdasdadasdads");
+                            this.pointSeries.getData().add(point);
+                        } catch (IllegalArgumentException e) {
+                            e.getCause();
+                        }
+                    }
                 }
             }
         }
