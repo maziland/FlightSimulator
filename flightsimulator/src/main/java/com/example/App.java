@@ -18,46 +18,46 @@ import com.example.viewmodel.MainViewModel;
  */
 public class App extends Application {
 
-    private static Scene scene;
+	private static Scene scene;
 
-    @Override
-    public void start(Stage stage) throws IOException {
+	@Override
+	public void start(Stage stage) throws IOException {
 
-        try {
+		try {
 
-            MainModel m = new MainModel(); // Model
-            MainViewModel vm = new MainViewModel(m); // View Model
+			MainModel m = new MainModel(); // Model
+			MainViewModel vm = new MainViewModel(m); // View Model
 
-            FXMLLoader fxl = new FXMLLoader();
-            // BorderPane root = (BorderPane)
-            // fxl.load(getClass().getResource("MainWindow.fxml").openStream());
-            VBox root = (VBox) fxl.load(this.getClass().getResource("MainView.fxml").openStream());
+			FXMLLoader fxl = new FXMLLoader();
+			// BorderPane root = (BorderPane)
+			// fxl.load(getClass().getResource("MainWindow.fxml").openStream());
+			VBox root = (VBox) fxl.load(this.getClass().getResource("MainView.fxml").openStream());
 
-            MainView view = fxl.getController(); // View
-            view.setViewModel(vm);
+			MainView view = fxl.getController(); // View
+			view.setViewModel(vm);
 
-            Scene scene = new Scene(root, 1200, 800);
-            String css = this.getClass().getResource("myStyle.css").toExternalForm();
-            scene.getStylesheets().add(css);
-            stage.setScene(scene);
-            stage.show();
+			Scene scene = new Scene(root, 1200, 800);
+			String css = this.getClass().getResource("myStyle.css").toExternalForm();
+			scene.getStylesheets().add(css);
+			stage.setScene(scene);
+			stage.show();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-    }
+	}
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
+	static void setRoot(String fxml) throws IOException {
+		scene.setRoot(loadFXML(fxml));
+	}
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
+	private static Parent loadFXML(String fxml) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+		return fxmlLoader.load();
+	}
 
-    public static void main(String[] args) {
-        launch();
-    }
+	public static void main(String[] args) {
+		launch();
+	}
 }
