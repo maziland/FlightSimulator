@@ -1,6 +1,7 @@
 package com.test.example;
 
 import java.io.File;
+import java.nio.file.FileSystems;
 
 import com.example.model.MainModel;
 
@@ -15,7 +16,7 @@ public class TestFlightSimulatorConnector implements TestRunner {
             throw new Exception("test failed - filesize is wrong");
         }
 
-        model.setTimeSeries("flightsimulator/src/main/config/config.xml");
+        model.setTimeSeries(FileSystems.getDefault().getPath(".").toString() + "\\" + "config.xml");
         if (model.getTimeSeriesHashMap() != MainModel.HashMap)
             throw new Exception("test - the time is wrong");
 
@@ -23,11 +24,11 @@ public class TestFlightSimulatorConnector implements TestRunner {
             throw new Exception("test - the func getXmlColumns is wrong");
 
         // test validate csv
-        if (model.validateCSV(new File("flightsimulator/src/main/config/flight.csv")) != true)
+        if (model.validateCSV(new File(FileSystems.getDefault().getPath(".").toString() + "\\" + "flight.csv")) != true)
             throw new Exception("test - the func validateCSV is wrong");
 
         // test validate xml
-        if (model.validateXML(new File("flightsimulator/src/main/config/config.xml")) != true)
+        if (model.validateXML(new File(FileSystems.getDefault().getPath(".").toString() + "\\" + "config.xml")) != true)
             throw new Exception("test - the func validateXML is wrong");
 
     }

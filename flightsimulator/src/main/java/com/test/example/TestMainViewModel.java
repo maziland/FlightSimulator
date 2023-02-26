@@ -3,6 +3,7 @@ package com.test.example;
 import java.io.File;
 
 import com.example.model.MainModel;
+import java.nio.file.FileSystems;
 import com.example.viewmodel.MainViewModel;
 
 import com.test.TestRunner;
@@ -18,11 +19,11 @@ public class TestMainViewModel implements TestRunner {
         }
 
         // test validate csv
-        if (model.validateCSV(new File("flightsimulator/src/main/config/flight.csv")) != true)
+        if (model.validateCSV(new File(FileSystems.getDefault().getPath(".").toString() + "\\" + "flight.csv")) != true)
             throw new Exception("test - the func validateCSV is wrong");
 
         // test validate xml
-        if (model.validateXML(new File("flightsimulator/src/main/config/config.xml")) != true)
+        if (model.validateXML(new File(FileSystems.getDefault().getPath(".").toString() + "\\" + "config.xml")) != true)
             throw new Exception("test - the func validateXML is wrong");
 
         // need to test

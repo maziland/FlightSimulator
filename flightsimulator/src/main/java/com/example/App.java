@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import com.example.model.MainModel;
 import com.example.view.MainView;
@@ -29,15 +30,15 @@ public class App extends Application {
 			MainViewModel vm = new MainViewModel(m); // View Model
 
 			FXMLLoader fxl = new FXMLLoader();
-			// BorderPane root = (BorderPane)
-			// fxl.load(getClass().getResource("MainWindow.fxml").openStream());
-			VBox root = (VBox) fxl.load(this.getClass().getResource("MainView.fxml").openStream());
+			InputStream is = this.getClass().getResource("/MainView.fxml").openStream();
+			Object obj = fxl.load(is);
+			VBox root = (VBox) obj;
 
 			MainView view = fxl.getController(); // View
 			view.setViewModel(vm);
 
 			Scene scene = new Scene(root, 1200, 800);
-			String css = this.getClass().getResource("myStyle.css").toExternalForm();
+			String css = this.getClass().getResource("/myStyle.css").toExternalForm();
 			scene.getStylesheets().add(css);
 			stage.setScene(scene);
 			stage.show();

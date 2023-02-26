@@ -5,6 +5,7 @@ import com.example.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -44,8 +45,8 @@ import com.example.viewmodel.MainViewModel;
 public class MainView implements Initializable {
 
     // regular variables
-    final String xml_config_path = "flightsimulator/src/main/config/config.xml";
-    final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
+    final String xml_config_path = FileSystems.getDefault().getPath(".").toString() + "\\" + "config.xml";
+    final String csv_config_path = FileSystems.getDefault().getPath(".").toString() + "\\" + "flight.csv";
     List<String> xmlColumnsNames;
     List<String> xmlNodes;
     List<Integer> currentAnomaliesTimeSteps;

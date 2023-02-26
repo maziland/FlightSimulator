@@ -2,6 +2,7 @@ package com.example.viewmodel;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.List;
 
 import com.example.model.MainModel;
@@ -22,8 +23,8 @@ import javafx.collections.ObservableMap;
 public class MainViewModel {
 
     MainModel m;
-    final String xml_config_path = "flightsimulator/src/main/config/config.xml";
-    final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
+    final String xml_config_path = FileSystems.getDefault().getPath(".").toString() + "\\" + "config.xml";
+    final String csv_config_path = FileSystems.getDefault().getPath(".").toString() + "\\" + "flight.csv";
     public ListProperty<String> attributesListProperty, algorithmsListProperty;
     public StringProperty selectedAttribute, selectedAlgorithm;
     public MapProperty<String, float[]> hashMap;

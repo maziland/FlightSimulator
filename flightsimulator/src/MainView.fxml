@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.GridPane?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.shape.Circle?>
+
+
+<!-- Root VBox -->
+<VBox spacing="20" minWidth="500" maxWidth="-Infinity" alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.view.MainView">
+   <padding>
+     <Insets top="30" bottom="30" left="30" right="30"/>
+   </padding>
+   <children>         
+         <!-- Upper HBox -->
+         <HBox fx:id="Upper_HBox" maxWidth="-Infinity" spacing="10">
+
+            <!-- Attributes List -->
+            <ListView fx:id="attributeList" minWidth="200" maxWidth="400" maxHeight="400" onMouseClicked="#listMouseClick"/>
+
+            <!-- Graphs VBox -->
+            <VBox fx:id="Graphs_VBox" minWidth="200" maxWidth="400" maxHeight="400">
+
+               <!-- Graph #1 and #2 HBox -->
+               <HBox fx:id="2_Graphs_HBox" styleClass="pink-text">
+
+                  <!-- First Graph -->
+                  <LineChart fx:id="selectedAttributeGraph" layoutX="14.0" layoutY="52.0" title="Selected Attribute" styleClass="pink-text">
+                     <xAxis>
+                        <NumberAxis side="BOTTOM" fx:id="FGxAxis"/>
+                     </xAxis>
+                     <yAxis>
+                       <NumberAxis side="LEFT" fx:id="FGyAxis"/>
+                     </yAxis>
+                  </LineChart>
+
+                  <!-- Second Graph -->
+                  <LineChart fx:id="correlativeAttributeGraph" layoutX="14.0" layoutY="52.0" title="CorrelativeAttribute" styleClass="pink-text">
+                     <xAxis>
+                        <NumberAxis side="BOTTOM" fx:id="SGxAxis" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis side="LEFT" fx:id="SGyAxis"/>
+                     </yAxis>
+                  </LineChart>
+               </HBox>
+               
+               <!-- Third Graph -->
+               <LineChart fx:id="anomaliesGraph" layoutX="14.0" layoutY="52.0" title="AnomaliesGraph" styleClass="pink-text"><xAxis>
+                     <NumberAxis side="BOTTOM" />
+                  </xAxis>
+                  <yAxis>
+                    <NumberAxis side="LEFT" />
+                  </yAxis>
+               </LineChart>
+
+            </VBox>
+
+            <!-- joystick and clocks -->
+            <VBox fx:id="Joystick_And_Clocks" maxWidth="400" minWidth="200">
+               <HBox>
+                  <Slider fx:id="rudder" orientation="VERTICAL" />
+                  <Pane fx:id="joystickStack">
+                     <Circle fill="CE7777" layoutX="24.0" radius="62" translateX="80.0" translateY="60" />
+                     <Circle fill="2B3A55" layoutX="24.0" radius="60" translateX="80.0" translateY="60" />
+                     <Circle fx:id="joyStick" fill="CE7777" layoutX="24.0" radius="30" translateX="80.0" translateY="60" />
+                  </Pane>
+               </HBox>
+               <Slider fx:id="throttle">
+               </Slider>
+               <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox prefHeight="18.0" prefWidth="200.0">
+                     <children>
+                        <Label text="latitude" textFill="#ce7777">
+                           <HBox.margin>
+                              <Insets left="30.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="longitude" textFill="#ce7777">
+                           <HBox.margin>
+                              <Insets left="60.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="45.0" prefWidth="184.0">
+                     <children>
+                        <Label fx:id="latitude" prefHeight="26.0" prefWidth="97.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="longitude" prefHeight="26.0" prefWidth="97.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </HBox>
+                  <HBox prefHeight="18.0" prefWidth="200.0">
+                     <children>
+                        <Label text="altitude" textFill="#ce7777">
+                           <HBox.margin>
+                              <Insets left="30.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="roll" textFill="#ce7777">
+                           <HBox.margin>
+                              <Insets left="80.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="45.0" prefWidth="184.0">
+                     <children>
+                        <Label fx:id="altitude" prefHeight="26.0" prefWidth="97.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="roll" prefHeight="26.0" prefWidth="97.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </HBox>
+                  <HBox prefHeight="18.0" prefWidth="200.0">
+                     <children>
+                        <Label text="pitch" textFill="#ce7777">
+                           <HBox.margin>
+                              <Insets left="30.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="yawn" textFill="#ce7777">
+                           <HBox.margin>
+                              <Insets left="80.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="45.0" prefWidth="184.0">
+                     <children>
+                        <Label fx:id="pitch" prefHeight="26.0" prefWidth="97.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="yawn" prefHeight="26.0" prefWidth="97.0" style="-fx-border-color: #ce7777;" text="0" textAlignment="CENTER" textFill="#ce7777" wrapText="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="2.0" left="20.0" right="8.0" top="2.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </HBox>
+               </children>
+               </VBox>
+            </VBox> 
+         </HBox>
+               
+
+         <!-- Lower HBox -->
+         <HBox fx:id="Lower_HBox" alignment="CENTER_LEFT" maxWidth="-Infinity" spacing="10">
+            
+            <!-- CSV and XML Buttons -->
+            <VBox fx:id="FileButtons" minWidth="200" maxWidth="400" spacing="5">
+               <Button fx:id="uploadXML" alignment="CENTER" text="Upload XML" onAction="#uploadXML" prefHeight="40" prefWidth="200"/>
+               <Button fx:id="uploadCSV" alignment="CENTER" text="Upload CSV" onAction="#uploadCSV" prefHeight="40" prefWidth="200"/>
+               <ComboBox fx:id="algorithmsDropdown" prefHeight="40" prefWidth="200" onMouseClicked="#listMouseClick"/>
+            </VBox>
+            
+            <!-- Media Commands -->
+            <HBox fx:id="MediaControlsHBox" alignment="CENTER" maxWidth="-Infinity" spacing="3.0">
+               <Button fx:id="BackToStartButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#controlButtonHandler">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" >
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Skip-To-Start-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id = "BackwardButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#controlButtonHandler">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Rewind-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id="stopButton"  layoutX="5" layoutY="5" onAction="#controlButtonHandler">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/512/Media-Controls-Stop-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id="PlayButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#controlButtonHandler">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Play-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id = "PauseButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#controlButtonHandler">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Pause-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id = "ForwardButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#controlButtonHandler">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" >
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-Fast-Forward-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+               <Button fx:id="endButton" layoutX="104.0" layoutY="81.0" mnemonicParsing="false" onAction="#controlButtonHandler">
+               <graphic>
+                  <ImageView fx:id="GoToEndButton" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                     <Image url="https://icons.iconarchive.com/icons/icons8/windows-8/128/Media-Controls-End-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               </Button>
+            </HBox>
+
+            <Label alignment="CENTER" text="Play Speed: " styleClass="pink-text"/>
+            <TextField fx:id="speedInput" alignment="CENTER" text="1" maxWidth="30" styleClass="pink-bg"/>
+         </HBox>
+
+         <!-- Time Slider -->
+         <Slider fx:id="TimeSlider" blockIncrement="0.1" layoutX="26.0" layoutY="32.0" majorTickUnit="10" max="10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
+   </children>
+</VBox>

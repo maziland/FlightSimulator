@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
@@ -36,7 +37,7 @@ public class FlightSimulatorConnector {
 
     private String simulator_ip = "localhost";
     private int simulator_port = 5400;
-    final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
+    final String csv_config_path = FileSystems.getDefault().getPath(".").toString() + "\\" + "flight.csv";
 
     class FlightConnector implements Runnable {
         @Override

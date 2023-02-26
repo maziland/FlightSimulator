@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,9 +39,9 @@ public class MainModel {
 
     public static Object HashMap;
 
-    public final String xml_config_path = "flightsimulator/src/main/config/config.xml";
-    final String csv_config_path = "flightsimulator/src/main/config/flight.csv";
-    final String normalFlightPath = "flightsimulator/src/main/config/reg_flight.csv";
+    public final String xml_config_path = FileSystems.getDefault().getPath(".").toString() + "\\" + "config.xml";
+    final String csv_config_path = FileSystems.getDefault().getPath(".").toString() + "\\" + "flight.csv";
+    final String normalFlightPath = FileSystems.getDefault().getPath(".").toString() + "\\" + "reg_flight.csv";
     List<String> xmlColumns;
     List<String> xmlNodes;
 
